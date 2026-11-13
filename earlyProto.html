@@ -1,47 +1,46 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DS26 Interceptor - Drone Takeover System</title>
+    <title>DS26 // DRONE STEALER '26 - Tactical RF Interceptor</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-
     <!-- FontAwesome Icons -->
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     />
-
-    <!-- Google Fonts Monospace & Tech -->
+    <!-- Google Fonts: Orbitron, Share Tech Mono, Rajdhani -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&display=swap"
       rel="stylesheet"
     />
 
     <script>
       tailwind.config = {
+        darkMode: "class",
         theme: {
           extend: {
             colors: {
-              cyber: {
-                bg: "#050b14",
-                card: "#0a1526",
-                border: "#162b4d",
-                green: "#00ff66",
-                red: "#ff0033",
-                yellow: "#ffcc00",
+              ds: {
+                bg: "#05080f",
+                panel: "#0a111e",
+                card: "#0e1729",
+                border: "#182b49",
                 cyan: "#00f0ff",
-                darkGreen: "rgba(0, 255, 102, 0.1)",
-                darkRed: "rgba(255, 0, 51, 0.15)",
+                green: "#00ff9d",
+                red: "#ff2a5f",
+                amber: "#ffb800",
+                purple: "#b829ff",
               },
             },
             fontFamily: {
-              mono: ["Share Tech Mono", "monospace"],
               head: ["Orbitron", "sans-serif"],
-              tech: ["Rajdhani", "sans-serif"],
+              mono: ["Share Tech Mono", "monospace"],
+              sans: ["Rajdhani", "sans-serif"],
             },
           },
         },
@@ -50,1168 +49,2023 @@
 
     <style>
       body {
-        background-color: #030712;
+        background-color: #05080f;
         color: #e2e8f0;
         font-family: "Rajdhani", sans-serif;
-        overflow-x: hidden;
         background-image:
           radial-gradient(
-            circle at 50% 50%,
-            rgba(0, 240, 255, 0.03) 0%,
-            transparent 70%
+            circle at 50% 0%,
+            rgba(0, 240, 255, 0.09) 0%,
+            transparent 58%
           ),
-          linear-gradient(to right, rgba(16, 37, 66, 0.2) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(16, 37, 66, 0.2) 1px, transparent 1px);
+          linear-gradient(
+            to right,
+            rgba(24, 43, 73, 0.25) 1px,
+            transparent 1px
+          ),
+          linear-gradient(
+            to bottom,
+            rgba(24, 43, 73, 0.25) 1px,
+            transparent 1px
+          );
         background-size:
           100% 100%,
-          20px 20px,
-          20px 20px;
+          28px 28px,
+          28px 28px;
       }
 
-      /* Scanline effect */
-      .scanlines {
-        position: relative;
-      }
-      .scanlines::before {
+      /* CRT Scanline Overlay */
+      .crt-overlay::after {
         content: " ";
         display: block;
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
+        position: fixed;
+        inset: 0;
         background:
-          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+          linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.28) 50%),
           linear-gradient(
             90deg,
-            rgba(255, 0, 0, 0.03),
+            rgba(255, 0, 0, 0.02),
             rgba(0, 255, 0, 0.01),
-            rgba(0, 0, 255, 0.03)
+            rgba(0, 0, 255, 0.02)
           );
-        z-index: 40;
         background-size:
           100% 3px,
           6px 100%;
+        z-index: 999;
         pointer-events: none;
       }
 
-      /* Glow Effects */
-      .glow-green {
-        box-shadow: 0 0 15px rgba(0, 255, 102, 0.35);
-      }
-      .glow-red {
-        box-shadow: 0 0 15px rgba(255, 0, 51, 0.4);
-      }
-      .glow-cyan {
-        box-shadow: 0 0 15px rgba(0, 240, 255, 0.35);
-      }
-      .text-glow-green {
-        text-shadow: 0 0 8px rgba(0, 255, 102, 0.6);
-      }
-      .text-glow-red {
-        text-shadow: 0 0 8px rgba(255, 0, 51, 0.8);
-      }
-
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #050b14;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #162b4d;
-        border-radius: 2px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #00f0ff;
-      }
-
-      /* Radar Sweep Animation */
-      @keyframes radarSweep {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-      .radar-sweeper {
-        animation: radarSweep 4s linear infinite;
-        transform-origin: 50% 50%;
-      }
-
-      /* Pulse Animation */
-      @keyframes blipPulse {
-        0% {
-          transform: scale(1);
-          opacity: 1;
-        }
-        50% {
-          transform: scale(1.4);
-          opacity: 0.6;
-        }
-        100% {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-      .blip-pulse {
-        animation: blipPulse 1.5s infinite ease-in-out;
-      }
-
-      /* HUD Corners */
-      .hud-box {
+      /* Tactical Glass Panel & Corner Brackets */
+      .tactical-panel {
+        background: rgba(9, 17, 30, 0.82);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(23, 44, 74, 0.9);
         position: relative;
-        background: rgba(10, 21, 38, 0.7);
-        border: 1px solid rgba(22, 43, 77, 0.8);
-        backdrop-filter: blur(8px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.65);
       }
-      .hud-box::before {
+      .tactical-panel::before {
         content: "";
         position: absolute;
         top: -1px;
         left: -1px;
-        width: 8px;
-        height: 8px;
+        width: 12px;
+        height: 12px;
         border-top: 2px solid #00f0ff;
         border-left: 2px solid #00f0ff;
+        pointer-events: none;
       }
-      .hud-box::after {
+      .tactical-panel::after {
         content: "";
         position: absolute;
         bottom: -1px;
         right: -1px;
-        width: 8px;
-        height: 8px;
+        width: 12px;
+        height: 12px;
         border-bottom: 2px solid #00f0ff;
         border-right: 2px solid #00f0ff;
+        pointer-events: none;
       }
 
-      .hud-box-danger::before {
-        border-color: #ff0033;
+      .panel-danger::before {
+        border-color: #ff2a5f;
       }
-      .hud-box-danger::after {
-        border-color: #ff0033;
+      .panel-danger::after {
+        border-color: #ff2a5f;
+      }
+      .panel-success::before {
+        border-color: #00ff9d;
+      }
+      .panel-success::after {
+        border-color: #00ff9d;
+      }
+      .panel-hijack::before {
+        border-color: #b829ff;
+      }
+      .panel-hijack::after {
+        border-color: #b829ff;
+      }
+
+      /* Neon Glows */
+      .glow-cyan {
+        box-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
+      }
+      .glow-green {
+        box-shadow: 0 0 18px rgba(0, 255, 157, 0.35);
+      }
+      .glow-red {
+        box-shadow: 0 0 22px rgba(255, 42, 95, 0.45);
+      }
+      .glow-purple {
+        box-shadow: 0 0 20px rgba(184, 41, 255, 0.45);
+      }
+
+      .text-glow-cyan {
+        text-shadow: 0 0 10px rgba(0, 240, 255, 0.75);
+      }
+      .text-glow-green {
+        text-shadow: 0 0 10px rgba(0, 255, 157, 0.75);
+      }
+      .text-glow-red {
+        text-shadow: 0 0 10px rgba(255, 42, 95, 0.85);
+      }
+      .text-glow-purple {
+        text-shadow: 0 0 10px rgba(184, 41, 255, 0.85);
+      }
+
+      /* DS26 Custom SVG Glow Filter */
+      .ds26-logo-glow {
+        filter: drop-shadow(0 0 6px rgba(0, 240, 255, 0.8))
+          drop-shadow(0 0 12px rgba(0, 255, 157, 0.4));
+      }
+
+      /* Mini RF Waveform Animation */
+      @keyframes rfWave {
+        0%,
+        100% {
+          transform: scaleY(0.3);
+        }
+        50% {
+          transform: scaleY(1);
+        }
+      }
+      .rf-bar {
+        transform-origin: bottom;
+        animation: rfWave 0.9s ease-in-out infinite;
+      }
+      .tactical-panel::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        right: -1px;
+        width: 12px;
+        height: 12px;
+        border-bottom: 2px solid #00f3ff;
+        border-right: 2px solid #00f3ff;
+        pointer-events: none;
+      }
+
+      .panel-danger::before {
+        border-color: #ff003c;
+      }
+      .panel-danger::after {
+        border-color: #ff003c;
+      }
+      .panel-success::before {
+        border-color: #00ff66;
+      }
+      .panel-success::after {
+        border-color: #00ff66;
+      }
+      .panel-hijack::before {
+        border-color: #b829ff;
+      }
+      .panel-hijack::after {
+        border-color: #b829ff;
+      }
+
+      /* Neon Glows */
+      .glow-cyan {
+        box-shadow: 0 0 18px rgba(0, 243, 255, 0.35);
+      }
+      .glow-green {
+        box-shadow: 0 0 18px rgba(0, 255, 102, 0.35);
+      }
+      .glow-red {
+        box-shadow: 0 0 22px rgba(255, 0, 60, 0.45);
+      }
+      .glow-purple {
+        box-shadow: 0 0 20px rgba(184, 41, 255, 0.45);
+      }
+
+      .text-glow-cyan {
+        text-shadow: 0 0 10px rgba(0, 243, 255, 0.75);
+      }
+      .text-glow-green {
+        text-shadow: 0 0 10px rgba(0, 255, 102, 0.75);
+      }
+      .text-glow-red {
+        text-shadow: 0 0 10px rgba(255, 0, 60, 0.85);
+      }
+      .text-glow-purple {
+        text-shadow: 0 0 10px rgba(184, 41, 255, 0.85);
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #030712;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #172c4a;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #00f3ff;
+      }
+
+      /* Animations */
+      @keyframes pulseRing {
+        0% {
+          transform: translate(-50%, -50%) scale(0.8);
+          opacity: 0.9;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(2.3);
+          opacity: 0;
+        }
+      }
+      .blip-ring {
+        animation: pulseRing 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      }
+
+      @keyframes hackBtnShimmer {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .btn-hack-gradient {
+        background: linear-gradient(270deg, #b9002b, #ff2a5f, #d90429, #ff2a5f);
+        background-size: 300% 300%;
+        animation: hackBtnShimmer 4s ease infinite;
       }
     </style>
   </head>
   <body
-    class="min-h-screen flex flex-col justify-between scanlines select-none font-tech"
+    class="min-h-screen flex flex-col justify-between crt-overlay selection:bg-ds-cyan selection:text-black"
   >
-    <!-- HEADER TAKTIS -->
+    <!-- ==================== 1. HEADER TAKTIS FUTURISTIK ==================== -->
     <header
-      class="bg-cyber-card/90 border-b border-cyber-border px-4 py-2 text-xs md:text-sm"
+      class="bg-ds-panel/95 border-b border-ds-border px-4 py-2.5 sticky top-0 z-40 backdrop-blur-md"
     >
       <div
-        class="max-w-[1920px] mx-auto flex flex-wrap items-center justify-between gap-4"
+        class="max-w-[1850px] mx-auto flex flex-wrap items-center justify-between gap-3"
       >
-        <!-- Branding & Title -->
-        <div class="flex items-center space-x-3">
+        <!-- Brand & Custom DS26 SVG Logo -->
+        <div class="flex items-center gap-3.5">
           <div
-            class="w-9 h-9 rounded border border-cyber-cyan/50 bg-cyber-cyan/10 flex items-center justify-center text-cyber-cyan text-lg glow-cyan"
+            class="w-11 h-11 rounded-lg bg-ds-bg border border-ds-cyan/70 flex items-center justify-center p-1.5 glow-cyan relative shrink-0"
           >
-            <i class="fa-solid fa-shield-halved"></i>
+            <!-- Exact DS26 Custom Viewfinder + Quadcopter SVG Logo -->
+            <svg
+              viewBox="0 0 100 100"
+              class="w-full h-full ds26-logo-glow"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <!-- 4 L-Shaped Corner Viewfinder Brackets -->
+              <path
+                d="M10 26 V10 H26"
+                stroke="#00f0ff"
+                stroke-width="5.5"
+                stroke-linecap="square"
+              />
+              <path
+                d="M74 10 H90 V26"
+                stroke="#00f0ff"
+                stroke-width="5.5"
+                stroke-linecap="square"
+              />
+              <path
+                d="M10 74 V90 H26"
+                stroke="#00f0ff"
+                stroke-width="5.5"
+                stroke-linecap="square"
+              />
+              <path
+                d="M74 90 H90 V74"
+                stroke="#00f0ff"
+                stroke-width="5.5"
+                stroke-linecap="square"
+              />
+
+              <!-- 4 Diagonal Quadcopter Arms -->
+              <line
+                x1="33"
+                y1="33"
+                x2="43"
+                y2="44"
+                stroke="#00ff9d"
+                stroke-width="4.5"
+                stroke-linecap="round"
+              />
+              <line
+                x1="67"
+                y1="33"
+                x2="57"
+                y2="44"
+                stroke="#00ff9d"
+                stroke-width="4.5"
+                stroke-linecap="round"
+              />
+              <line
+                x1="33"
+                y1="67"
+                x2="43"
+                y2="56"
+                stroke="#00ff9d"
+                stroke-width="4.5"
+                stroke-linecap="round"
+              />
+              <line
+                x1="67"
+                y1="67"
+                x2="57"
+                y2="56"
+                stroke="#00ff9d"
+                stroke-width="4.5"
+                stroke-linecap="round"
+              />
+
+              <!-- 4 Hollow Ring Rotors -->
+              <circle
+                cx="31"
+                cy="31"
+                r="10.5"
+                stroke="#00f0ff"
+                stroke-width="4"
+              />
+              <circle
+                cx="69"
+                cy="31"
+                r="10.5"
+                stroke="#00f0ff"
+                stroke-width="4"
+              />
+              <circle
+                cx="31"
+                cy="69"
+                r="10.5"
+                stroke="#00f0ff"
+                stroke-width="4"
+              />
+              <circle
+                cx="69"
+                cy="69"
+                r="10.5"
+                stroke="#00f0ff"
+                stroke-width="4"
+              />
+
+              <!-- Central Rounded-Rectangle Drone Body -->
+              <rect
+                x="40"
+                y="43"
+                width="20"
+                height="13"
+                rx="4"
+                fill="#00ff9d"
+              />
+              <!-- Bottom Center Camera / Sensor Bump -->
+              <circle cx="50" cy="58.5" r="3.2" fill="#00f0ff" />
+            </svg>
+            <span
+              class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-ds-green rounded-full border border-black animate-ping"
+            ></span>
           </div>
           <div>
-            <h1
-              class="font-head font-black text-base md:text-xl tracking-wider text-white flex items-center gap-2"
-            >
-              DS26 <span class="text-cyber-cyan">INTERCEPTOR</span>
-              <span
-                class="text-[10px] px-2 py-0.5 rounded bg-cyber-cyan/20 border border-cyber-cyan/40 text-cyber-cyan font-mono font-normal"
-                >v2.6-TACTICAL</span
+            <div class="flex items-center gap-2">
+              <h1
+                class="font-head font-black text-base sm:text-xl tracking-wider text-white"
               >
-            </h1>
-            <p class="text-slate-400 font-mono text-[11px] hidden sm:block">
-              MILITARY DRONE SIGNAL ANALYSIS & TAKEOVER MODULE
+                DS26
+                <span class="text-ds-cyan text-glow-cyan"
+                  >// DRONE STEALER '26</span
+                >
+              </h1>
+              <span
+                class="hidden md:inline-block px-2 py-0.5 text-[10px] font-mono bg-ds-cyan/15 text-ds-cyan border border-ds-cyan/40 rounded"
+              >
+                UI PROTOTYPE v1.0
+              </span>
+            </div>
+            <p class="font-mono text-[11px] text-ds-green/90 tracking-widest">
+              TACTICAL RF INTERCEPTOR SYSTEM
             </p>
           </div>
         </div>
 
-        <!-- Status Indicator Panel -->
-        <div class="flex items-center gap-3 md:gap-6 font-mono text-xs">
-          <!-- SDR Status -->
+        <!-- Real-Time Detection Status & Controls -->
+        <div
+          class="flex flex-wrap items-center gap-2 sm:gap-3 font-mono text-xs"
+        >
+          <!-- SDR Link Status Badge -->
           <div
-            class="flex items-center space-x-2 bg-cyber-bg px-3 py-1.5 rounded border border-cyber-border"
+            class="flex items-center gap-2 bg-ds-bg/90 border border-ds-green/40 px-3 py-1.5 rounded-md"
           >
+            <span class="w-2 h-2 rounded-full bg-ds-green animate-pulse"></span>
             <span
-              class="w-2.5 h-2.5 rounded-full bg-cyber-green animate-ping"
-            ></span>
-            <span class="text-slate-400">SDR HARDWARE:</span>
-            <span
-              class="text-cyber-green font-bold text-glow-green"
-              id="sdr-status"
-              >ACTIVE (HACKRF ONE)</span
+              class="text-ds-green font-bold text-glow-green"
+              id="header-scan-status"
+            >
+              SDR LINK: ACTIVE // 2.4 - 5.8 GHz
+            </span>
+          </div>
+
+          <!-- Live System Clock -->
+          <div
+            class="hidden sm:flex items-center gap-2 bg-ds-bg/90 border border-ds-border px-3 py-1.5 rounded-md"
+          >
+            <i class="fa-regular fa-clock text-ds-amber"></i>
+            <span id="live-clock" class="text-white font-bold"
+              >00:00:00 UTC</span
             >
           </div>
 
-          <!-- Frequency Spectrum -->
+          <!-- Simulation Mode Control for Team Presentation -->
           <div
-            class="hidden lg:flex items-center space-x-2 bg-cyber-bg px-3 py-1.5 rounded border border-cyber-border"
+            class="flex items-center gap-2 bg-ds-card border border-ds-cyan/50 px-2.5 py-1 rounded-md shadow-inner"
+            title="Atur hasil peretasan untuk kebutuhan presentasi tim"
           >
-            <i class="fa-solid fa-wave-square text-cyber-cyan"></i>
-            <span class="text-slate-400">SCAN:</span>
-            <span class="text-cyber-cyan font-bold" id="freq-status"
-              >2.4GHz / 5.8GHz / UHF</span
+            <label
+              for="sim-mode"
+              class="text-[10px] text-ds-cyan font-bold uppercase tracking-wider"
             >
-          </div>
-
-          <!-- System Time & Coordinates -->
-          <div
-            class="flex items-center space-x-4 bg-cyber-bg px-3 py-1.5 rounded border border-cyber-border"
-          >
-            <div>
-              <span class="text-slate-500">SYS TIME:</span>
-              <span class="text-white font-bold" id="clock">00:00:00 UTC</span>
-            </div>
-            <div class="hidden sm:block">
-              <span class="text-slate-500">GRID:</span>
-              <span class="text-cyber-yellow font-bold">41°24'N 2°10'E</span>
-            </div>
-          </div>
-
-          <!-- Force Hack Result Simulation Mode -->
-          <div
-            class="flex items-center space-x-1.5 bg-cyber-bg px-2 py-1 rounded border border-slate-800"
-            title="Simulasi Hasil Hack untuk Pengujian UI"
-          >
-            <span class="text-[10px] text-slate-400 font-mono">SIM MODE:</span>
+              <i class="fa-solid fa-sliders mr-1"></i>MODE SIMULASI:
+            </label>
             <select
-              id="sim-outcome"
-              class="bg-slate-900 text-slate-200 text-xs font-mono rounded px-1.5 py-0.5 border border-slate-700 outline-none focus:border-cyber-cyan"
+              id="sim-mode"
+              class="bg-ds-bg text-white text-xs font-mono rounded px-2 py-0.5 border border-ds-border focus:border-ds-cyan outline-none cursor-pointer"
             >
-              <option value="random">⚡ ACAK (RANDOM)</option>
-              <option value="success">✅ SELALU SUCCESS</option>
-              <option value="fail">❌ SELALU FAIL</option>
+              <option value="auto">AUTO (Sesuai Kerentanan)</option>
+              <option value="force_success">PAKSA BERHASIL (SUCCESS)</option>
+              <option value="force_fail">PAKSA GAGAL (FAILED)</option>
             </select>
           </div>
+
+          <!-- Reset Demo Button -->
+          <button
+            onclick="resetSimulation()"
+            class="bg-ds-card hover:bg-slate-800 text-slate-300 hover:text-white border border-ds-border px-2.5 py-1.5 rounded-md transition flex items-center gap-1.5 cursor-pointer"
+            title="Reset ulang seluruh drone ke posisi awal"
+          >
+            <i class="fa-solid fa-rotate-right text-ds-cyan"></i>
+            <span class="hidden md:inline">RESET</span>
+          </button>
         </div>
       </div>
     </header>
 
-    <!-- MAIN INTERFACE BODY -->
+    <!-- ==================== MAIN DASHBOARD GRID ==================== -->
     <main
-      class="max-w-[1920px] mx-auto w-full flex-1 p-3 md:p-5 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start"
+      class="max-w-[1850px] w-full mx-auto flex-1 p-3 sm:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4"
     >
-      <!-- COLUMN 1: RADAR DISPLAY & LIST DRONE DETECTED (7 COLS) -->
+      <!-- ==================== 2. RADAR REAL-TIME (SISI KIRI - 7 KOLOM) ==================== -->
       <section class="lg:col-span-7 flex flex-col gap-4">
-        <!-- RADAR CANVAS CONTAINER -->
+        <!-- Radar Container -->
         <div
-          class="hud-box p-4 rounded-lg flex flex-col items-center justify-center relative overflow-hidden"
+          class="tactical-panel rounded-xl p-4 flex flex-col justify-between relative overflow-hidden"
         >
-          <!-- Radar Header Overlay -->
+          <!-- Radar Top Bar -->
           <div
-            class="w-full flex justify-between items-center mb-2 z-10 font-mono text-xs"
+            class="flex flex-wrap items-center justify-between gap-2 border-b border-ds-border/80 pb-2.5 mb-2 font-mono text-xs z-10"
           >
-            <div class="flex items-center space-x-2">
+            <div class="flex items-center gap-2">
               <i
-                class="fa-solid fa-radar text-cyber-cyan animate-spin"
-                style="animation-duration: 8s"
+                class="fa-solid fa-crosshairs text-ds-cyan animate-spin"
+                style="animation-duration: 10s"
               ></i>
-              <span class="text-cyber-cyan font-bold tracking-wider"
-                >TACTICAL RF RADAR SPECTRUM</span
+              <span class="font-head font-bold text-white tracking-wider"
+                >360° TACTICAL RF RADAR</span
               >
             </div>
-            <div class="flex space-x-3 text-slate-400">
-              <span>RANGE: <strong class="text-white">5.0 KM</strong></span>
-              <span
-                >TARGETS DETECTED:
-                <strong class="text-cyber-green" id="target-count"
-                  >5</strong
-                ></span
+            <div class="flex items-center gap-4 text-[11px]">
+              <span class="text-slate-400"
+                >RANGE: <strong class="text-ds-cyan">1000 M</strong></span
+              >
+              <span class="text-slate-400"
+                >BAND:
+                <strong class="text-ds-amber">915M / 2.4G / 5.8G</strong></span
+              >
+              <span class="text-slate-400"
+                >SWEEP: <strong class="text-ds-green">ACTIVE</strong></span
               >
             </div>
           </div>
 
-          <!-- Radar Canvas Element -->
-          <div
-            class="relative w-full aspect-square max-w-[500px] flex items-center justify-center my-2"
-          >
-            <!-- Background Radar Rings -->
+          <!-- Interactive Radar Canvas Wrapper -->
+          <div class="relative w-full flex items-center justify-center my-1">
             <div
-              class="absolute inset-0 rounded-full border border-cyber-cyan/30 flex items-center justify-center pointer-events-none"
+              id="radar-wrapper"
+              class="relative w-full max-w-[490px] aspect-square flex items-center justify-center"
             >
+              <canvas
+                id="radar-canvas"
+                class="w-full h-full rounded-full cursor-crosshair"
+              ></canvas>
+
+              <!-- Center Base Marker Overlay with Mini DS26 SVG -->
               <div
-                class="w-3/4 h-3/4 rounded-full border border-cyber-cyan/20 flex items-center justify-center"
+                class="absolute pointer-events-none flex flex-col items-center justify-center"
               >
                 <div
-                  class="w-1/2 h-1/2 rounded-full border border-cyber-cyan/20 flex items-center justify-center"
+                  class="w-7 h-7 rounded-full bg-ds-bg/90 border border-ds-cyan glow-cyan flex items-center justify-center p-1"
                 >
-                  <div
-                    class="w-1/4 h-1/4 rounded-full border border-cyber-cyan/30"
-                  ></div>
+                  <svg
+                    viewBox="0 0 100 100"
+                    class="w-full h-full"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M10 26 V10 H26 M74 10 H90 V26 M10 74 V90 H26 M74 90 H90 V74"
+                      stroke="#00f0ff"
+                      stroke-width="7"
+                    />
+                    <circle cx="50" cy="50" r="14" fill="#00ff9d" />
+                  </svg>
                 </div>
+                <span
+                  class="mt-1 text-[9px] font-mono text-ds-cyan bg-ds-bg/90 px-1.5 rounded border border-ds-cyan/30"
+                  >DS26 UNIT</span
+                >
               </div>
-            </div>
-
-            <!-- Crosshairs -->
-            <div
-              class="absolute inset-0 flex items-center justify-center pointer-events-none"
-            >
-              <div class="w-full h-[1px] bg-cyber-cyan/20"></div>
-              <div class="h-full w-[1px] bg-cyber-cyan/20 absolute"></div>
-            </div>
-
-            <!-- Radar Sweeper Arc -->
-            <div
-              class="absolute inset-0 rounded-full overflow-hidden pointer-events-none"
-            >
-              <div
-                class="radar-sweeper w-full h-full rounded-full"
-                style="
-                  background: conic-gradient(
-                    from 0deg,
-                    rgba(0, 240, 255, 0.4) 0deg,
-                    rgba(0, 240, 255, 0.05) 45deg,
-                    transparent 60deg
-                  );
-                "
-              ></div>
-            </div>
-
-            <!-- Interactive Radar Blips Container -->
-            <div id="radar-blips-container" class="absolute inset-0">
-              <!-- Blips added dynamically by JS -->
-            </div>
-
-            <!-- Center Base Icon -->
-            <div
-              class="absolute w-6 h-6 rounded-full bg-cyber-cyan/20 border border-cyber-cyan flex items-center justify-center z-10 shadow-lg shadow-cyber-cyan/30"
-            >
-              <div class="w-2 h-2 rounded-full bg-cyber-cyan"></div>
             </div>
           </div>
 
-          <!-- Radar Footer Legend -->
+          <!-- Radar Legend & Instructions -->
           <div
-            class="w-full flex justify-between items-center mt-2 z-10 font-mono text-[11px] text-slate-400 border-t border-cyber-border/50 pt-2"
+            class="flex flex-wrap items-center justify-between gap-2 border-t border-ds-border/80 pt-2.5 mt-2 font-mono text-[11px] text-slate-400 z-10"
           >
-            <div class="flex space-x-4">
-              <span class="flex items-center gap-1"
-                ><span
-                  class="w-2 h-2 rounded-full bg-cyber-green inline-block"
+            <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+              <span class="flex items-center gap-1.5">
+                <span
+                  class="w-2.5 h-2.5 rounded-full bg-ds-green inline-block shadow-[0_0_8px_#00ff9d]"
                 ></span>
-                Publik / Komersial</span
-              >
-              <span class="flex items-center gap-1"
-                ><span
-                  class="w-2 h-2 rounded-full bg-cyber-red inline-block"
+                Publik/Komersial
+              </span>
+              <span class="flex items-center gap-1.5">
+                <span
+                  class="w-2.5 h-2.5 rounded-full bg-ds-red inline-block shadow-[0_0_8px_#ff2a5f]"
                 ></span>
-                Militer / Taktis</span
-              >
-              <span class="flex items-center gap-1"
-                ><span
-                  class="w-2 h-2 rounded-full bg-cyber-cyan inline-block"
+                Militer/Hostile
+              </span>
+              <span class="flex items-center gap-1.5">
+                <span
+                  class="w-2.5 h-2.5 rounded-full bg-ds-purple inline-block shadow-[0_0_8px_#b829ff]"
                 ></span>
-                Terpilih (Target)</span
-              >
+                Taken-Over (DS26)
+              </span>
+              <span class="flex items-center gap-1.5">
+                <span
+                  class="w-2.5 h-2.5 rounded-full bg-slate-600 inline-block"
+                ></span>
+                Shutdown
+              </span>
             </div>
-            <div>
-              <span>SWEEP SPEED: <b>4.0s</b></span>
-            </div>
+            <span class="text-ds-cyan"
+              ><i class="fa-solid fa-computer-mouse mr-1"></i>Klik blip radar
+              untuk lock target</span
+            >
           </div>
         </div>
 
-        <!-- DRONE QUICK SELECT MATRIX -->
-        <div class="hud-box p-3 rounded-lg">
-          <h3
-            class="font-head font-bold text-xs text-slate-300 mb-2 flex items-center justify-between"
-          >
+        <!-- Quick Target Selector Strip (Below Radar) -->
+        <div class="tactical-panel rounded-xl p-3.5">
+          <div class="flex items-center justify-between mb-2.5">
+            <h3
+              class="font-head font-bold text-xs tracking-wider text-white flex items-center gap-2"
+            >
+              <i class="fa-solid fa-tower-broadcast text-ds-cyan"></i> DAFTAR
+              TARGET TERDETEKSI (QUICK LOCK)
+            </h3>
             <span
-              ><i class="fa-solid fa-list-check text-cyber-cyan mr-1.5"></i>
-              SPECTRUM TARGET MATRIX</span
+              class="font-mono text-[11px] text-slate-400"
+              id="active-drone-counter"
+              >5 Perangkat di Udara</span
             >
-            <span class="text-[10px] font-mono text-slate-500"
-              >KLIK TARGET UNTUK INJEKSI</span
-            >
-          </h3>
-
+          </div>
           <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2"
-            id="drone-list-matrix"
+            id="quick-target-list"
+            class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2.5"
           >
-            <!-- Dynamic Matrix Cards -->
+            <!-- Populated by JS -->
           </div>
         </div>
       </section>
 
-      <!-- COLUMN 2: TARGET DETAIL PANEL & TERMINAL LOG (5 COLS) -->
+      <!-- ==================== 3 & 4. TELEMETRI DETAIL & EKSEKUSI PERETASAN (SISI KANAN - 5 KOLOM) ==================== -->
       <section class="lg:col-span-5 flex flex-col gap-4">
-        <!-- TARGET PROFILE & HACK CONTROL PANEL -->
-        <div class="hud-box p-4 rounded-lg relative" id="target-profile-panel">
+        <!-- Target Telemetry & Device Classification Panel -->
+        <div
+          id="telemetry-panel"
+          class="tactical-panel rounded-xl p-4 sm:p-5 flex flex-col justify-between transition-all duration-300"
+        >
           <!-- Panel Header -->
           <div
-            class="flex justify-between items-center border-b border-cyber-border pb-2 mb-3"
+            class="flex items-center justify-between border-b border-ds-border pb-3 mb-4"
           >
-            <div class="flex items-center space-x-2">
-              <i
-                class="fa-solid fa-crosshairs text-cyber-red text-base animate-pulse"
-              ></i>
-              <h2 class="font-head font-bold text-sm tracking-wide text-white">
-                TARGET ACQUISITION PROFILE
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 bg-ds-cyan rounded-sm rotate-45"></span>
+              <h2 class="font-head font-bold text-sm tracking-wider text-white">
+                TELEMETRI & PROFIL TARGET
               </h2>
             </div>
             <span
-              id="target-threat-badge"
-              class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyber-red/20 text-cyber-red border border-cyber-red/40"
+              id="ui-target-id"
+              class="font-mono text-xs px-2.5 py-0.5 rounded bg-ds-cyan/15 text-ds-cyan border border-ds-cyan/40 font-bold"
             >
-              HIGH THREAT
+              ID: DRONE-01
             </span>
           </div>
 
-          <!-- Target Selected Detailed Cards -->
-          <div id="target-details-content" class="space-y-3 font-mono text-xs">
-            <!-- Header Target Name & Stack -->
-            <div
-              class="bg-cyber-bg p-3 rounded border border-cyber-border flex justify-between items-start"
-            >
+          <!-- Drone Identity Hero Card -->
+          <div
+            class="bg-ds-bg/90 border border-ds-border rounded-lg p-3.5 mb-3.5 relative overflow-hidden"
+          >
+            <div class="flex justify-between items-start gap-2">
               <div>
-                <div class="text-[10px] text-slate-400">
-                  DRONE MODEL / IDENTIFIER
-                </div>
-                <div
-                  class="text-base font-head font-bold text-cyber-cyan"
-                  id="detail-name"
+                <span
+                  class="text-[10px] font-mono text-slate-400 uppercase tracking-wider block"
+                  >MODEL & MEREK PESAWAT NIRAWAK</span
                 >
-                  DJI MAVIC 3 PRO
-                </div>
-                <div
-                  class="text-slate-300 text-[11px] mt-0.5"
-                  id="detail-maker"
+                <h3
+                  id="ui-drone-model"
+                  class="font-head font-extrabold text-lg sm:text-xl text-white mt-0.5 tracking-wide"
                 >
-                  Pabrikan: DJI (Da-Jiang Innovations)
-                </div>
+                  DJI Mavic 3 Enterprise
+                </h3>
+                <p
+                  id="ui-drone-maker"
+                  class="font-mono text-xs text-ds-cyan mt-0.5"
+                >
+                  Manufaktur: DJI Innovations
+                </p>
               </div>
               <div class="text-right">
-                <div class="text-[10px] text-slate-400">KATEGORI</div>
-                <div
-                  class="font-bold text-cyber-green text-[11px]"
-                  id="detail-category"
+                <span
+                  id="ui-device-class-badge"
+                  class="inline-block px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-ds-green/15 text-ds-green border border-ds-green/40"
                 >
-                  PUBLIK / KOMERSIAL
-                </div>
+                  KOMERSIAL / PUBLIK
+                </span>
               </div>
             </div>
 
-            <!-- Tech Specs Grid -->
-            <div class="grid grid-cols-2 gap-2">
-              <div
-                class="bg-cyber-bg/60 p-2.5 rounded border border-cyber-border/70"
+            <!-- Signal Detection Status Banner -->
+            <div
+              id="ui-signal-status-box"
+              class="mt-3 pt-2.5 border-t border-ds-border/70 flex items-center justify-between font-mono text-xs"
+            >
+              <span class="text-slate-400">STATUS DETEKSI SINYAL:</span>
+              <span
+                id="ui-signal-status"
+                class="text-ds-green font-bold flex items-center gap-1.5"
               >
-                <span class="text-slate-400 block text-[10px]"
-                  >FLIGHT STACK / OS</span
-                >
-                <span class="font-bold text-white text-xs" id="detail-stack"
-                  >OcuSync 3.0+</span
-                >
-              </div>
-              <div
-                class="bg-cyber-bg/60 p-2.5 rounded border border-cyber-border/70"
-              >
-                <span class="text-slate-400 block text-[10px]"
-                  >FIRMWARE VERSION</span
-                >
-                <span
-                  class="font-bold text-cyber-yellow text-xs"
-                  id="detail-firmware"
-                  >v01.00.0900</span
-                >
-              </div>
-              <div
-                class="bg-cyber-bg/60 p-2.5 rounded border border-cyber-border/70"
-              >
-                <span class="text-slate-400 block text-[10px]"
-                  >RF FREQUENCY LINK</span
-                >
-                <span class="font-bold text-white text-xs" id="detail-rf"
-                  >2.4 GHz (FHSS)</span
-                >
-              </div>
-              <div
-                class="bg-cyber-bg/60 p-2.5 rounded border border-cyber-border/70"
-              >
-                <span class="text-slate-400 block text-[10px]"
-                  >DISTANCE & BEARING</span
-                >
-                <span class="font-bold text-cyber-cyan text-xs" id="detail-dist"
-                  >1.2 KM / 142° SE</span
-                >
-              </div>
-            </div>
-
-            <!-- Protocol Vulnerability Analysis -->
-            <div class="bg-cyber-bg p-2.5 rounded border border-cyber-border">
-              <div class="flex justify-between items-center mb-1">
-                <span class="text-slate-400 text-[10px]"
-                  >PROTOCOL ENCRYPTION & EXPLOIT VULNERABILITY</span
-                >
-                <span
-                  class="text-cyber-green font-bold text-[10px]"
-                  id="detail-vuln"
-                  >EXPLOITABLE (88%)</span
-                >
-              </div>
-              <div
-                class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden"
-              >
-                <div
-                  id="detail-vuln-bar"
-                  class="bg-cyber-green h-full rounded-full"
-                  style="width: 88%"
-                ></div>
-              </div>
-              <p
-                class="text-[10px] text-slate-400 mt-1.5"
-                id="detail-exploit-info"
-              >
-                Tersedia exploit buffer overflow pada handshake paket OcuSync
-                telemetry data-link.
-              </p>
+                <i class="fa-solid fa-lock"></i> SIGNAL LOCKED / HANDSHAKE
+                CAPTURED
+              </span>
             </div>
           </div>
 
-          <!-- HACK BUTTON AREA -->
-          <div class="mt-4 pt-2">
-            <button
-              id="btn-hack"
-              onclick="executeHackProcess()"
-              class="w-full py-3.5 px-4 rounded bg-gradient-to-r from-cyber-red via-red-600 to-cyber-red hover:from-red-600 hover:to-red-700 text-white font-head font-black tracking-widest text-sm flex items-center justify-center space-x-2 transition-all transform active:scale-98 glow-red"
+          <!-- Technical Telemetry Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3.5 font-mono">
+            <!-- Frekuensi Terdeteksi + Mini RF Spectrum Waveform -->
+            <div class="bg-ds-card/80 border border-ds-border rounded-lg p-3">
+              <div
+                class="flex items-center justify-between text-[10px] text-slate-400 mb-1"
+              >
+                <span
+                  ><i class="fa-solid fa-wave-square text-ds-cyan mr-1"></i>
+                  FREKUENSI TERDETEKSI</span
+                >
+                <!-- Mini Animated RF Spectrum Waveform Bars -->
+                <div id="ui-rf-waveform" class="flex items-end gap-0.5 h-3.5">
+                  <span
+                    class="w-1 bg-ds-cyan h-full rf-bar"
+                    style="animation-delay: 0s"
+                  ></span>
+                  <span
+                    class="w-1 bg-ds-green h-full rf-bar"
+                    style="animation-delay: 0.15s"
+                  ></span>
+                  <span
+                    class="w-1 bg-ds-cyan h-full rf-bar"
+                    style="animation-delay: 0.3s"
+                  ></span>
+                  <span
+                    class="w-1 bg-ds-amber h-full rf-bar"
+                    style="animation-delay: 0.45s"
+                  ></span>
+                  <span
+                    class="w-1 bg-ds-cyan h-full rf-bar"
+                    style="animation-delay: 0.2s"
+                  ></span>
+                  <span
+                    class="w-1 bg-ds-green h-full rf-bar"
+                    style="animation-delay: 0.35s"
+                  ></span>
+                </div>
+              </div>
+              <div id="ui-frequency" class="text-sm font-bold text-ds-cyan">
+                2.440 GHz
+              </div>
+              <div id="ui-modulation" class="text-[11px] text-slate-400 mt-0.5">
+                Protokol: DJI OcuSync 3.0
+              </div>
+              <div id="ui-flight-stack" class="hidden">
+                DJI Flight Core // OcuSync 3.0
+              </div>
+              <div id="ui-firmware" class="hidden">v01.00.0900</div>
+            </div>
+
+            <!-- Signal Strength / RSSI -->
+            <div class="bg-ds-card/80 border border-ds-border rounded-lg p-3">
+              <div
+                class="flex justify-between items-center text-[10px] text-slate-400 mb-1"
+              >
+                <span
+                  ><i class="fa-solid fa-signal text-ds-green mr-1"></i> SIGNAL
+                  / RSSI</span
+                >
+                <span id="ui-rssi-quality" class="text-ds-green font-bold"
+                  >92% LINK</span
+                >
+              </div>
+              <div class="flex items-baseline justify-between">
+                <span id="ui-rssi-val" class="text-base font-bold text-white"
+                  >-54 dBm</span
+                >
+                <span id="ui-distance" class="text-xs text-slate-400"
+                  >Jarak: 320 m</span
+                >
+              </div>
+              <!-- RSSI Visual Bars -->
+              <div
+                class="w-full bg-ds-bg h-2 rounded-full mt-2 overflow-hidden border border-slate-800 p-0.5 flex gap-0.5"
+                id="ui-rssi-bars"
+              >
+                <div class="h-full bg-ds-green flex-1 rounded-xs"></div>
+                <div class="h-full bg-ds-green flex-1 rounded-xs"></div>
+                <div class="h-full bg-ds-green flex-1 rounded-xs"></div>
+                <div class="h-full bg-ds-green flex-1 rounded-xs"></div>
+                <div class="h-full bg-slate-800 flex-1 rounded-xs"></div>
+              </div>
+            </div>
+
+            <!-- Estimasi Arah / Bearing + Mini Compass -->
+            <div
+              class="bg-ds-card/80 border border-ds-border rounded-lg p-3 flex items-center justify-between"
             >
-              <i class="fa-solid fa-terminal text-lg animate-bounce"></i>
-              <span>INJEKSI PERINTAH DS26 / EXECUTE HACK</span>
+              <div>
+                <div
+                  class="text-[10px] text-slate-400 flex items-center gap-1.5 mb-1"
+                >
+                  <i class="fa-regular fa-compass text-ds-amber"></i> ESTIMASI
+                  ARAH
+                </div>
+                <div
+                  id="ui-bearing-text"
+                  class="text-base font-bold text-white"
+                >
+                  142° SE
+                </div>
+                <div id="ui-altitude" class="text-[11px] text-slate-400 mt-0.5">
+                  Alt: 120m AGL
+                </div>
+              </div>
+              <!-- Visual Mini Compass -->
+              <div
+                class="relative w-12 h-12 rounded-full border border-ds-cyan/50 bg-ds-bg flex items-center justify-center shrink-0"
+              >
+                <span class="absolute top-0.5 text-[8px] text-ds-red font-bold"
+                  >N</span
+                >
+                <span class="absolute bottom-0.5 text-[8px] text-slate-500"
+                  >S</span
+                >
+                <span class="absolute left-1 text-[8px] text-slate-500">W</span>
+                <span class="absolute right-1 text-[8px] text-slate-500"
+                  >E</span
+                >
+                <!-- Rotating Needle -->
+                <div
+                  id="ui-compass-needle"
+                  class="w-0.5 h-8 relative transition-transform duration-500"
+                  style="transform: rotate(142deg)"
+                >
+                  <div
+                    class="w-full h-1/2 bg-ds-cyan rounded-t-full shadow-[0_0_6px_#00f3ff]"
+                  ></div>
+                  <div class="w-full h-1/2 bg-slate-600 rounded-b-full"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vulnerability & Encryption Analysis -->
+          <div
+            class="bg-ds-bg/90 border border-ds-border rounded-lg p-3 mb-4 font-mono"
+          >
+            <div class="flex justify-between items-center text-xs mb-1.5">
+              <span class="text-slate-400">ANALISIS KERENTANAN ENKRIPSI:</span>
+              <span id="ui-vuln-label" class="text-ds-green font-bold"
+                >TINGGI (85% EXPLOITABLE)</span
+              >
+            </div>
+            <div
+              class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-800"
+            >
+              <div
+                id="ui-vuln-bar"
+                class="bg-gradient-to-r from-ds-cyan to-ds-green h-full rounded-full transition-all duration-500"
+                style="width: 85%"
+              ></div>
+            </div>
+            <p
+              id="ui-vuln-desc"
+              class="text-[11px] text-slate-400 mt-2 leading-relaxed"
+            >
+              Celah terdeteksi pada handshake autentikasi OcuSync firmware
+              lawas. Siap untuk injeksi paket spoofing DS26.
+            </p>
+          </div>
+
+          <!-- Post-Hijack Mini Tactical Control Panel (Hidden until Hijacked) -->
+          <div
+            id="hijack-control-box"
+            class="hidden mb-4 bg-ds-purple/15 border border-ds-purple rounded-lg p-3.5 glow-purple"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span
+                class="font-head font-bold text-xs text-ds-purple text-glow-purple flex items-center gap-1.5"
+              >
+                <i class="fa-solid fa-gamepad"></i> KENDALI AKTIF DS26
+                (HIJACKED)
+              </span>
+              <span
+                class="text-[10px] font-mono bg-ds-purple text-white px-2 py-0.5 rounded font-bold animate-pulse"
+                >OVERRIDE ON</span
+              >
+            </div>
+            <p class="font-mono text-[11px] text-slate-300 mb-3">
+              Drone berada di bawah kendali penuh operator DS26. Pilih manuver
+              taktis:
+            </p>
+            <div class="grid grid-cols-3 gap-2 font-mono text-[11px]">
+              <button
+                onclick="
+                  sendHijackCommand(
+                    'FORCED LANDING (Pendaratan Paksa di Zona Aman)',
+                  )
+                "
+                class="bg-ds-purple/30 hover:bg-ds-purple text-white border border-ds-purple py-2 px-2 rounded font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+              >
+                <i class="fa-solid fa-plane-arrival"></i> LANDING
+              </button>
+              <button
+                onclick="
+                  sendHijackCommand(
+                    'RETURN TO BASE (Alihkan Rute ke Markas DS26)',
+                  )
+                "
+                class="bg-ds-cyan/20 hover:bg-ds-cyan hover:text-black text-ds-cyan border border-ds-cyan py-2 px-2 rounded font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+              >
+                <i class="fa-solid fa-route"></i> RTB BASE
+              </button>
+              <button
+                onclick="
+                  sendHijackCommand(
+                    'HOVER LOCK (Kunci Posisi Melayang di Udara)',
+                  )
+                "
+                class="bg-ds-green/20 hover:bg-ds-green hover:text-black text-ds-green border border-ds-green py-2 px-2 rounded font-bold transition flex items-center justify-center gap-1 cursor-pointer"
+              >
+                <i class="fa-solid fa-anchor"></i> HOVER LOCK
+              </button>
+            </div>
+          </div>
+
+          <!-- 4. BUTTON EKSEKUSI PERETASAN -->
+          <div>
+            <button
+              id="btn-execute-hack"
+              onclick="startHackSequence()"
+              class="w-full py-4 px-5 rounded-lg btn-hack-gradient text-white font-head font-black text-sm sm:text-base tracking-widest uppercase shadow-lg glow-red hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 cursor-pointer border border-red-400/50"
+            >
+              <i class="fa-solid fa-skull-crossbones text-lg"></i>
+              <span>EKSEKUSI PERETASAN // DS26 INJECT</span>
             </button>
           </div>
         </div>
+      </section>
 
-        <!-- TERMINAL LOG CONSOLE -->
-        <div class="hud-box p-3 rounded-lg flex-1 flex flex-col min-h-[220px]">
+      <!-- ==================== 5. LIVE TACTICAL TERMINAL LOG (FULL WIDTH BOTTOM) ==================== -->
+      <section class="lg:col-span-12">
+        <div class="tactical-panel rounded-xl p-3.5">
           <div
-            class="flex justify-between items-center border-b border-cyber-border pb-1.5 mb-2 font-mono text-xs"
+            class="flex items-center justify-between border-b border-ds-border pb-2 mb-2 font-mono text-xs"
           >
-            <span class="text-cyber-cyan font-bold flex items-center gap-1.5">
-              <i class="fa-solid fa-code text-xs"></i> DS26 REAL-TIME TACTICAL
-              LOG
-            </span>
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-ds-green"></i>
+              <span class="font-head font-bold text-white tracking-wider"
+                >DS26 LIVE TACTICAL TERMINAL LOG</span
+              >
+              <span class="hidden sm:inline-block text-[10px] text-slate-400"
+                >// REAL-TIME PACKET & EXPLOIT MONITOR</span
+              >
+            </div>
             <button
               onclick="clearTerminal()"
-              class="text-slate-500 hover:text-white text-[10px]"
+              class="text-[11px] text-slate-400 hover:text-ds-cyan transition px-2 py-0.5 rounded border border-ds-border bg-ds-bg"
             >
-              CLEAR LOG
+              <i class="fa-solid fa-eraser mr-1"></i>CLEAR LOG
             </button>
           </div>
-
-          <!-- Terminal Output Window -->
           <div
-            id="terminal-body"
-            class="flex-1 bg-cyber-bg/90 rounded p-2.5 font-mono text-[11px] overflow-y-auto space-y-1.5 border border-slate-900 max-h-[240px]"
+            id="terminal-logs"
+            class="bg-ds-bg/95 border border-slate-900 rounded-lg p-3 font-mono text-xs h-36 overflow-y-auto space-y-1.5"
           >
-            <div class="text-slate-500">
-              [SYSTEM INIT] DS-Interceptor v2.6 Cyber Command Engine Loaded.
-            </div>
-            <div class="text-slate-500">
-              [RF SCANNER] Hardware HackRF One bound to 2.400-5.850 GHz
-              spectrum.
-            </div>
-            <div class="text-cyber-green">
-              [DETECTION] 5 RF signals acquired. Target list populated.
-            </div>
+            <!-- Logs injected via JS -->
           </div>
         </div>
       </section>
     </main>
 
-    <!-- FOOTER STATUS BAR -->
-    <footer
-      class="bg-cyber-card border-t border-cyber-border px-4 py-1.5 font-mono text-[11px] text-slate-400 flex flex-wrap justify-between items-center gap-2"
-    >
-      <div class="flex items-center space-x-4">
-        <span
-          >OPERATOR: <strong class="text-white">COMMANDER_UNIT_01</strong></span
-        >
-        <span
-          >MODE: <strong class="text-cyber-cyan">AUTO-ACQUISITION</strong></span
-        >
-      </div>
-      <div class="flex items-center space-x-4">
-        <span class="flex items-center gap-1"
-          ><i class="fa-solid fa-signal text-cyber-green"></i> RF STRENGTH:
-          99.4%</span
-        >
-        <span>SECURITY LEVEL: <b>DEFCON 2</b></span>
-      </div>
-    </footer>
-
-    <!-- ================= MODALS & OVERLAYS ================= -->
-
-    <!-- HACKING PROGRESS MODAL -->
+    <!-- ==================== MODAL 1: COMMAND INJECTION PROGRESS ==================== -->
     <div
-      id="modal-hacking"
-      class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center hidden p-4"
+      id="modal-progress"
+      class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4"
     >
       <div
-        class="hud-box hud-box-danger max-w-md w-full p-6 rounded-lg bg-cyber-card border-cyber-red shadow-2xl"
+        class="tactical-panel panel-danger max-w-lg w-full rounded-xl p-6 bg-ds-panel"
       >
-        <div class="text-center space-y-4">
+        <div class="flex items-center gap-3 mb-4">
           <div
-            class="inline-block p-4 rounded-full bg-cyber-red/10 border border-cyber-red/40 text-cyber-red animate-pulse"
+            class="w-12 h-12 rounded-lg bg-ds-red/20 border border-ds-red flex items-center justify-center text-ds-red text-2xl glow-red animate-pulse"
           >
-            <i class="fa-solid fa-bug text-3xl"></i>
+            <i class="fa-solid fa-biohazard"></i>
           </div>
           <div>
-            <h3 class="font-head font-black text-lg text-white tracking-wide">
-              EXECUTING DS26 COMMAND INJECTION
+            <h3 class="font-head font-black text-lg text-white tracking-wider">
+              DS26 COMMAND INJECTION
             </h3>
-            <p
-              class="text-xs font-mono text-slate-400 mt-1"
-              id="hack-target-label"
-            >
-              Target: DJI Mavic 3 Pro (2.4GHz)
+            <p id="modal-prog-target" class="font-mono text-xs text-ds-cyan">
+              Target: DJI Mavic 3 Enterprise [2.412 GHz]
             </p>
           </div>
+        </div>
 
-          <!-- Progress Bar -->
-          <div class="space-y-1 text-left">
-            <div class="flex justify-between font-mono text-xs">
-              <span id="hack-status-step" class="text-cyber-cyan"
-                >Initializing RF Payload...</span
-              >
-              <span id="hack-percent" class="text-white font-bold">0%</span>
-            </div>
-            <div
-              class="w-full bg-slate-900 rounded-full h-3 overflow-hidden border border-cyber-border"
+        <!-- Progress Bar -->
+        <div class="mb-3 font-mono">
+          <div class="flex justify-between text-xs mb-1.5">
+            <span id="modal-prog-step" class="text-ds-amber font-bold"
+              >Scanning RF Handshake...</span
             >
-              <div
-                id="hack-progress-bar"
-                class="bg-gradient-to-r from-cyber-cyan to-cyber-green h-full rounded-full transition-all duration-300"
-                style="width: 0%"
-              ></div>
-            </div>
+            <span id="modal-prog-percent" class="text-white font-bold">0%</span>
           </div>
-
           <div
-            class="bg-cyber-bg p-2.5 rounded font-mono text-[10px] text-slate-400 text-left h-16 overflow-hidden border border-cyber-border/40"
-            id="hack-sublog"
+            class="w-full h-3.5 bg-ds-bg rounded-full overflow-hidden border border-ds-border p-0.5"
           >
-            > Transmitting RF Deauth Packets...<br />
-            > Spoofing GCS Telemetry MAC Address...
+            <div
+              id="modal-prog-bar"
+              class="h-full bg-gradient-to-r from-ds-red via-ds-amber to-ds-cyan rounded-full transition-all duration-200"
+              style="width: 0%"
+            ></div>
           </div>
+        </div>
+
+        <!-- Live Sub-console inside modal -->
+        <div
+          id="modal-prog-console"
+          class="bg-ds-bg border border-ds-border rounded-lg p-3 font-mono text-[11px] text-ds-green h-28 overflow-y-auto space-y-1"
+        >
+          <div>> Initializing HackRF One TX/RX burst mode...</div>
         </div>
       </div>
     </div>
 
-    <!-- POST HACK TAKEOVER / SUCCESS MODAL -->
+    <!-- ==================== MODAL 2: PERETASAN BERHASIL (TAKEOVER / SHUTDOWN) ==================== -->
     <div
       id="modal-success"
-      class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center hidden p-4"
+      class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4"
     >
       <div
-        class="hud-box max-w-lg w-full p-6 rounded-lg bg-cyber-card border-cyber-green shadow-2xl space-y-5"
+        class="tactical-panel panel-success max-w-xl w-full rounded-xl p-6 bg-ds-panel"
       >
-        <!-- Success Header -->
+        <!-- Header -->
         <div
-          class="flex items-center space-x-3 border-b border-cyber-border pb-3"
+          class="flex items-center gap-3.5 border-b border-ds-border pb-4 mb-4"
         >
           <div
-            class="w-10 h-10 rounded bg-cyber-green/20 border border-cyber-green flex items-center justify-center text-cyber-green text-xl glow-green"
+            class="w-12 h-12 rounded-full bg-ds-green/20 border-2 border-ds-green flex items-center justify-center text-ds-green text-2xl glow-green"
           >
-            <i class="fa-solid fa-circle-check"></i>
+            <i class="fa-solid fa-shield-check"></i>
           </div>
           <div>
-            <h3
-              class="font-head font-black text-lg text-cyber-green tracking-wider text-glow-green"
+            <span
+              class="text-[10px] font-mono text-ds-green uppercase tracking-widest font-bold"
+              >EXPLOIT PAYLOAD ACCEPTED</span
             >
-              PERETASAN BERHASIL / HACK SUCCESSFUL
+            <h3
+              class="font-head font-black text-lg sm:text-xl text-white text-glow-green"
+            >
+              PERETASAN BERHASIL
             </h3>
-            <p class="text-xs font-mono text-slate-300">
-              Kontrol Komunikasi Drone Target Telah Berhasil Diretas!
+            <p class="font-mono text-xs text-slate-300">
+              Kendali Protokol Target Berhasil Ditembus!
             </p>
           </div>
         </div>
 
-        <!-- Target Status Recap -->
+        <!-- Target Info Box -->
         <div
-          class="bg-cyber-bg p-3 rounded font-mono text-xs border border-cyber-border space-y-1"
+          class="bg-ds-bg/90 border border-ds-green/40 rounded-lg p-3.5 mb-5 font-mono text-xs space-y-1.5"
         >
-          <div class="flex justify-between text-slate-400">
-            <span>Target:</span>
-            <strong class="text-white" id="success-drone-name"
+          <div class="flex justify-between">
+            <span class="text-slate-400">TARGET TERKUNCI:</span>
+            <strong id="success-target-name" class="text-white"
               >DJI Mavic 3 Pro</strong
             >
           </div>
-          <div class="flex justify-between text-slate-400">
-            <span>Status Sinyal:</span>
-            <strong class="text-cyber-green">SIGNAL OVERRIDDEN (100%)</strong>
+          <div class="flex justify-between">
+            <span class="text-slate-400">PROTOKOL / FREKUENSI:</span>
+            <strong id="success-target-freq" class="text-ds-cyan"
+              >DJI OcuSync 3.0 // 2.440 GHz</strong
+            >
           </div>
-          <div class="flex justify-between text-slate-400">
-            <span>Navigasi GCS:</span>
-            <strong class="text-cyber-cyan">HIJACKED BY DS26 MODULE</strong>
+          <div class="flex justify-between">
+            <span class="text-slate-400">STATUS AKSES:</span>
+            <strong class="text-ds-green">ROOT GCS OVERRIDE GRANTED</strong>
           </div>
         </div>
 
-        <!-- ACTION CHOICE BUTTONS -->
-        <div class="space-y-3 pt-2">
-          <label
-            class="block text-xs font-mono text-slate-400 uppercase font-bold text-center"
-            >Pilih Tindakan Takfis Pasca-Peretasan:</label
+        <p
+          class="font-mono text-xs text-center text-slate-300 mb-3 uppercase tracking-wider font-bold"
+        >
+          Pilih Tindakan Taktis Terhadap Pesawat Nirawak:
+        </p>
+
+        <!-- 2 Action Buttons: Ambil Alih Kendali vs Shutdown Paksa -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-4">
+          <!-- Option 1: Takeover -->
+          <button
+            onclick="handleTakeover()"
+            class="group p-4 rounded-xl bg-ds-cyan/10 hover:bg-ds-cyan/25 border-2 border-ds-cyan transition-all text-left flex flex-col justify-between glow-cyan cursor-pointer"
           >
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <!-- Option 1: Takeover -->
-            <button
-              onclick="executeAction('TAKEOVER')"
-              class="p-3.5 rounded bg-cyber-cyan/10 border border-cyber-cyan hover:bg-cyber-cyan/20 text-cyber-cyan hover:text-white font-head font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition glow-cyan"
-            >
-              <i class="fa-solid fa-gamepad text-xl"></i>
-              <span>AMBIL ALIH KENDALI</span>
-              <span class="text-[9px] font-mono font-normal text-slate-400"
-                >Pindahkan RTH / Landed Safe</span
+            <div class="flex items-center justify-between mb-2">
+              <span
+                class="w-9 h-9 rounded-lg bg-ds-cyan/20 flex items-center justify-center text-ds-cyan text-lg group-hover:scale-110 transition"
               >
-            </button>
-
-            <!-- Option 2: Force Shutdown -->
-            <button
-              onclick="executeAction('SHUTDOWN')"
-              class="p-3.5 rounded bg-cyber-red/10 border border-cyber-red hover:bg-cyber-red/20 text-cyber-red hover:text-white font-head font-bold text-xs flex flex-col items-center justify-center gap-1.5 transition glow-red"
-            >
-              <i class="fa-solid fa-power-off text-xl"></i>
-              <span>SHUTDOWN PAKSA</span>
-              <span class="text-[9px] font-mono font-normal text-slate-400"
-                >Matikan Motor / Force Drop</span
+                <i class="fa-solid fa-gamepad"></i>
+              </span>
+              <span
+                class="text-[10px] font-mono px-2 py-0.5 rounded bg-ds-cyan text-black font-bold"
+                >OPSI 01</span
               >
-            </button>
-          </div>
+            </div>
+            <div>
+              <div
+                class="font-head font-extrabold text-sm text-white group-hover:text-ds-cyan transition"
+              >
+                AMBIL ALIH KENDALI (TAKEOVER)
+              </div>
+              <div class="font-mono text-[11px] text-slate-400 mt-1">
+                Rebut navigasi penuh untuk pendaratan aman, hover lock, atau
+                alihkan rute ke markas.
+              </div>
+            </div>
+          </button>
+
+          <!-- Option 2: Emergency Shutdown -->
+          <button
+            onclick="handleShutdown()"
+            class="group p-4 rounded-xl bg-ds-red/10 hover:bg-ds-red/25 border-2 border-ds-red transition-all text-left flex flex-col justify-between glow-red cursor-pointer"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <span
+                class="w-9 h-9 rounded-lg bg-ds-red/20 flex items-center justify-center text-ds-red text-lg group-hover:scale-110 transition"
+              >
+                <i class="fa-solid fa-power-off"></i>
+              </span>
+              <span
+                class="text-[10px] font-mono px-2 py-0.5 rounded bg-ds-red text-white font-bold"
+                >OPSI 02</span
+              >
+            </div>
+            <div>
+              <div
+                class="font-head font-extrabold text-sm text-white group-hover:text-ds-red transition"
+              >
+                SHUTDOWN PAKSA (FORCED SHUTDOWN)
+              </div>
+              <div class="font-mono text-[11px] text-slate-400 mt-1">
+                Matikan daya motor & flight controller secara instan di udara
+                untuk melumpuhkan target.
+              </div>
+            </div>
+          </button>
         </div>
 
-        <div class="text-center pt-2">
+        <div class="text-center">
           <button
             onclick="closeModal('modal-success')"
-            class="text-slate-500 hover:text-slate-300 font-mono text-xs underline"
+            class="font-mono text-xs text-slate-400 hover:text-white underline"
           >
-            Kembali ke Radar
+            Tutup Notifikasi & Pertahankan Koneksi
           </button>
         </div>
       </div>
     </div>
 
-    <!-- HACK FAIL MODAL -->
+    <!-- ==================== MODAL 3: PERETASAN GAGAL ==================== -->
     <div
       id="modal-fail"
-      class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center hidden p-4"
+      class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4"
     >
       <div
-        class="hud-box hud-box-danger max-w-md w-full p-6 rounded-lg bg-cyber-card border-cyber-red shadow-2xl space-y-4"
+        class="tactical-panel panel-danger max-w-md w-full rounded-xl p-6 bg-ds-panel text-center"
       >
-        <div class="text-center space-y-3">
-          <div
-            class="inline-block p-4 rounded-full bg-cyber-red/20 border border-cyber-red text-cyber-red text-2xl glow-red"
-          >
-            <i class="fa-solid fa-triangle-exclamation animate-bounce"></i>
-          </div>
-          <div>
-            <h3
-              class="font-head font-black text-lg text-cyber-red tracking-wider text-glow-red"
-            >
-              PERETASAN GAGAL / HACK FAILED
-            </h3>
-            <p class="text-xs font-mono text-slate-300 mt-1">
-              Sinyal Target Menolak Injeksi Paket DS26!
-            </p>
-          </div>
+        <div
+          class="w-14 h-14 rounded-full bg-ds-red/20 border-2 border-ds-red flex items-center justify-center text-ds-red text-3xl mx-auto mb-4 glow-red animate-bounce"
+        >
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
 
-          <div
-            class="bg-cyber-bg p-3 rounded font-mono text-xs text-left border border-cyber-border text-slate-400 space-y-1"
-          >
-            <div>
-              Penyebab:
-              <span class="text-white"
-                >Frequency Hopping / Enkripsi Militer Terlalu Kuat.</span
-              >
-            </div>
-            <div>
-              Rekomendasi:
-              <span class="text-cyber-yellow"
-                >Gunakan RF Amplification atau ganti spektrum frekuensi
-                SDR.</span
-              >
-            </div>
-          </div>
+        <span
+          class="text-[10px] font-mono text-ds-red uppercase tracking-widest font-bold"
+          >ACCESS DENIED // HANDSHAKE REJECTED</span
+        >
+        <h3
+          class="font-head font-black text-xl text-white text-glow-red mt-1 mb-2"
+        >
+          PERETASAN GAGAL
+        </h3>
+        <p class="font-mono text-xs text-slate-300 mb-4">
+          Enkripsi Target Terlalu Kuat / Sinyal Terputus saat transmisi payload
+          injeksi DS26.
+        </p>
 
-          <div class="pt-2">
-            <button
-              onclick="closeModal('modal-fail')"
-              class="w-full py-2.5 rounded bg-slate-800 hover:bg-slate-700 text-white font-mono text-xs font-bold border border-slate-600 transition"
+        <div
+          class="bg-ds-bg border border-ds-red/40 rounded-lg p-3 mb-5 font-mono text-xs text-left space-y-1"
+        >
+          <div class="text-slate-400">
+            Target:
+            <span id="fail-target-name" class="text-white font-bold"
+              >AeroVironment Switchblade 300</span
             >
-              TUTUP & RENCANAKAN ULANG
-            </button>
           </div>
+          <div class="text-slate-400">
+            Alasan Teknis:
+            <span id="fail-reason-text" class="text-ds-amber"
+              >AES-256 Military Frequency Hopping Blocked Injection</span
+            >
+          </div>
+          <div class="text-slate-400">
+            Saran Taktis:
+            <span class="text-ds-cyan"
+              >Tingkatkan gain antena directional SDR atau tunggu jarak
+              mendekat.</span
+            >
+          </div>
+        </div>
+
+        <div class="flex gap-3 font-mono text-xs">
+          <button
+            onclick="closeModal('modal-fail')"
+            class="flex-1 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 font-bold transition cursor-pointer"
+          >
+            TUTUP
+          </button>
+          <button
+            onclick="
+              closeModal('modal-fail');
+              startHackSequence();
+            "
+            class="flex-1 py-2.5 rounded-lg bg-ds-red hover:bg-red-600 text-white font-bold transition glow-red cursor-pointer"
+          >
+            <i class="fa-solid fa-rotate-right mr-1"></i>COBA LAGI
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- ==================== JAVASCRIPT INTERACTIVE ENGINE ==================== -->
     <script>
-      // Database Drones (Publik & Militer sesuai konteks DS26)
-      const droneTargets = [
+      // --- 1. INITIAL MOCK DRONE DATASET ---
+      const initialDrones = [
         {
-          id: "target-1",
-          name: "DJI Mavic 3 Pro",
-          maker: "DJI (Da-Jiang Innovations)",
-          category: "PUBLIK / KOMERSIAL",
-          type: "public",
-          stack: "OcuSync 3.0+",
+          id: "DRONE-01",
+          model: "DJI Mavic 3 Pro",
+          maker: "DJI Innovations",
+          classification: "PUBLIK / KOMERSIAL",
+          category: "commercial", // commercial | military
+          stack: "DJI Flight Core // OcuSync 3.0",
           firmware: "v01.00.0900",
-          rf: "2.4 GHz / 5.8 GHz",
-          dist: "1.2 KM / 142° SE",
-          threat: "MEDIUM THREAT",
-          vuln: 88,
-          exploitInfo:
-            "Dapat diretas via buffer overflow pada telemetry link OcuSync.",
-          x: 65, // % position on radar
-          y: 35,
+          frequency: "2.440 GHz",
+          modulation: "DJI OcuSync 3.0 (OFDM)",
+          rssi: -54,
+          distance: 320,
+          bearing: 42,
+          altitude: 115,
+          vulnerability: 84,
+          vulnDesc:
+            "Celah terdeteksi pada handshake autentikasi OcuSync firmware lawas. Siap untuk injeksi paket spoofing DS26.",
+          failReason: "OcuSync Dynamic Token Sync Timeout pada paket injeksi.",
+          status: "ACTIVE", // ACTIVE | HIJACKED | TERMINATED
+          angleRad: (42 - 90) * (Math.PI / 180),
+          radiusRatio: 0.32,
+          speedAngle: 0.0022,
         },
         {
-          id: "target-2",
-          name: "Bayraktar TB2 Taktis",
-          maker: "Baykar Technologies",
-          category: "MILITER / TAKTIS",
-          type: "military",
-          stack: "Proprietary Military GCS",
-          firmware: "v4.12.8-MIL",
-          rf: "UHF / Microwave Link",
-          dist: "4.1 KM / 310° NW",
-          threat: "CRITICAL THREAT",
-          vuln: 45,
-          exploitInfo:
-            "Enkripsi terenkode keras. Membutuhkan spoofing GPS & RF Jamming selektif.",
-          x: 25,
-          y: 20,
+          id: "DRONE-02",
+          model: "FPV Custom ELRS",
+          maker: "Open-Source Build (Betaflight)",
+          classification: "PUBLIK / CUSTOM FPV",
+          category: "commercial",
+          stack: "Betaflight 4.4 // ExpressLRS 2.4GHz",
+          firmware: "v4.4.2-ELRS",
+          frequency: "2.412 GHz",
+          modulation: "ExpressLRS 2.4GHz (LoRa/FLRC)",
+          rssi: -48,
+          distance: 210,
+          bearing: 142,
+          altitude: 65,
+          vulnerability: 93,
+          vulnDesc:
+            "Binding phrase standar terdeteksi pada tautan ExpressLRS 2.4GHz. Sangat rentan terhadap packet injection.",
+          failReason:
+            "Interferensi kanal tinggi menyebabkan paket CRSF terputus.",
+          status: "ACTIVE",
+          angleRad: (142 - 90) * (Math.PI / 180),
+          radiusRatio: 0.22,
+          speedAngle: -0.0032,
         },
         {
-          id: "target-3",
-          name: "Orlan-10 Recon Drone",
-          maker: "STC (Special Tech Center)",
-          category: "MILITER / TAKTIS",
-          type: "military",
-          stack: "GLONASS / RF Spread Spectrum",
-          firmware: "v2.0.4-RUS",
-          rf: "433 MHz / 900 MHz",
-          dist: "2.8 KM / 045° NE",
-          threat: "HIGH THREAT",
-          vuln: 72,
-          exploitInfo:
-            "Terdapat kerentanan unencrypted fallback pada tautan transmisi analog video.",
-          x: 75,
-          y: 25,
+          id: "DRONE-03",
+          model: "AeroVironment Switchblade 300",
+          maker: "AeroVironment Defense",
+          classification: "MILITER / TAKTIS",
+          category: "military",
+          stack: "Proprietary Mil-Spec GCS",
+          firmware: "v5.14.8-MIL-AES",
+          frequency: "5.785 GHz",
+          modulation: "Encrypted Spread-Spectrum",
+          rssi: -76,
+          distance: 840,
+          bearing: 312,
+          altitude: 420,
+          vulnerability: 32,
+          vulnDesc:
+            "Protokol militer terenkripsi AES-256 dengan frequency hopping cepat. Membutuhkan daya burst tinggi.",
+          failReason: "AES-256 Military Frequency Hopping Blocked Injection",
+          status: "ACTIVE",
+          angleRad: (312 - 90) * (Math.PI / 180),
+          radiusRatio: 0.84,
+          speedAngle: 0.0014,
         },
         {
-          id: "target-4",
-          name: "FPV Custom Quad",
-          maker: "Open Source (Betaflight)",
-          category: "PUBLIK / RAKITAN",
-          type: "public",
-          stack: "Betaflight / MAVLink",
-          firmware: "v4.4.2-Release",
-          rf: "2.4 GHz ExpressLRS",
-          dist: "0.6 KM / 210° SW",
-          threat: "HIGH THREAT",
-          vuln: 95,
-          exploitInfo:
-            "Protokol MAVLink terbuka tanpa enkripsi. Injeksi komando dapat dilakukan instan.",
-          x: 35,
-          y: 75,
+          id: "DRONE-04",
+          model: "Orlan-10 Recon",
+          maker: "Special Technology Center",
+          classification: "MILITER / TAKTIS",
+          category: "military",
+          stack: "ArduPilot Mil-Mod // MAVLink CRSF",
+          firmware: "v2.09.4-RECON",
+          frequency: "915.0 MHz",
+          modulation: "MAVLink CRSF Telemetry",
+          rssi: -65,
+          distance: 610,
+          bearing: 218,
+          altitude: 310,
+          vulnerability: 64,
+          vulnDesc:
+            "Saluran telemetri MAVLink cadangan tidak terenkripsi penuh. Dapat diintersepsi dengan modul spoofing DS26.",
+          failReason:
+            "Frequency Hopping Guard Band menolak frame MAVLink palsu.",
+          status: "ACTIVE",
+          angleRad: (218 - 90) * (Math.PI / 180),
+          radiusRatio: 0.61,
+          speedAngle: 0.0018,
         },
         {
-          id: "target-5",
-          name: "Skydio X2 Recon",
-          maker: "Skydio Inc.",
-          category: "PUBLIK / MILITER LIGHT",
-          type: "public",
-          stack: "Skydio Autonomy Engine",
-          firmware: "v10.3.1",
-          rf: "1.8 GHz / 5.8 GHz",
-          dist: "3.2 KM / 180° S",
-          threat: "MEDIUM THREAT",
-          vuln: 60,
-          exploitInfo:
-            "Sistem navigasi visual independen. Harus melakukan jam pada paket Wi-Fi sync.",
-          x: 50,
-          y: 82,
+          id: "DRONE-05",
+          model: "Parrot Anafi USA",
+          maker: "Parrot Drones SAS",
+          classification: "PUBLIK / KOMERSIAL",
+          category: "commercial",
+          stack: "FreeFlight 6 // Skycontroller",
+          firmware: "v1.10.2-GOV",
+          frequency: "5.180 GHz",
+          modulation: "802.11ac Wi-Fi Tactical",
+          rssi: -59,
+          distance: 450,
+          bearing: 96,
+          altitude: 140,
+          vulnerability: 79,
+          vulnDesc:
+            "Tautan Wi-Fi Skycontroller rentan terhadap serangan deauthentication & pengambilalihan sesi.",
+          failReason: "WPA3-SAE Handshake Protection menahan paket deauth.",
+          status: "ACTIVE",
+          angleRad: (96 - 90) * (Math.PI / 180),
+          radiusRatio: 0.45,
+          speedAngle: -0.002,
         },
       ];
 
-      let selectedTarget = droneTargets[0];
+      let drones = JSON.parse(JSON.stringify(initialDrones));
+      let selectedDroneId = "DRONE-01";
+      let sweepAngle = 0;
+      let radarScreenPositions = []; // Store clickable coordinates {id, x, y}
 
-      // Initialize UI
-      window.onload = function () {
-        startClock();
-        renderRadarBlips();
-        renderMatrixCards();
-        selectTarget(droneTargets[0].id);
-        logTerminal(
-          "Sistem DS26 Siap. Silahkan pilih target di radar.",
-          "cyber-cyan",
+      // --- 2. INITIALIZATION ---
+      window.addEventListener("DOMContentLoaded", () => {
+        startLiveClock();
+        startRssiFluctuation();
+        renderQuickTargetList();
+        selectDrone("DRONE-01");
+        initRadarCanvas();
+        addTerminalLog(
+          "[SYSTEM] DS26 (Drone Stealer '26) Tactical Core Online.",
+          "text-ds-cyan",
         );
-      };
+        addTerminalLog(
+          "[SDR-HW] HackRF One terhubung. Memindai pita frekuensi 915MHz / 2.4GHz / 5.8GHz.",
+          "text-ds-green",
+        );
+        addTerminalLog(
+          "[RADAR] 5 pesawat nirawak terdeteksi dalam radius 1000m.",
+          "text-slate-300",
+        );
+      });
 
-      // Realtime Clock Update
-      function startClock() {
+      function startLiveClock() {
+        const clockEl = document.getElementById("live-clock");
         setInterval(() => {
           const now = new Date();
-          document.getElementById("clock").innerText =
-            now.toTimeString().split(" ")[0] + " UTC";
+          clockEl.textContent = now.toTimeString().split(" ")[0] + " UTC";
         }, 1000);
       }
 
-      // Render Interactive Radar Blips
-      function renderRadarBlips() {
-        const container = document.getElementById("radar-blips-container");
-        container.innerHTML = "";
-
-        droneTargets.forEach((drone) => {
-          const blip = document.createElement("div");
-          const isSelected = drone.id === selectedTarget.id;
-          const isMilitary = drone.type === "military";
-
-          let colorClass = isMilitary
-            ? "bg-cyber-red border-cyber-red"
-            : "bg-cyber-green border-cyber-green";
-          if (isSelected)
-            colorClass =
-              "bg-cyber-cyan border-cyber-cyan glow-cyan z-30 scale-125";
-
-          blip.className = `absolute cursor-pointer transform -translate-x-1/2 -translate-y-1/2 group transition-all duration-300`;
-          blip.style.left = `${drone.x}%`;
-          blip.style.top = `${drone.y}%`;
-          blip.onclick = () => selectTarget(drone.id);
-
-          blip.innerHTML = `
-                    <div class="relative flex items-center justify-center">
-                        <span class="w-4 h-4 rounded-full ${colorClass} border-2 flex items-center justify-center blip-pulse">
-                            <span class="w-1.5 h-1.5 rounded-full bg-white"></span>
-                        </span>
-                        <!-- Label Tooltip on Hover -->
-                        <div class="absolute bottom-5 left-1/2 -translate-x-1/2 hidden group-hover:block bg-cyber-card border border-cyber-border text-white text-[10px] font-mono px-2 py-1 rounded whitespace-nowrap z-40 shadow-lg pointer-events-none">
-                            ${drone.name} (${drone.dist})
-                        </div>
-                    </div>
-                `;
-          container.appendChild(blip);
-        });
-
-        document.getElementById("target-count").innerText = droneTargets.length;
+      // Real-time fluctuating dBm RSSI telemetry
+      function startRssiFluctuation() {
+        setInterval(() => {
+          const drone = drones.find((d) => d.id === selectedDroneId);
+          if (!drone || drone.status === "TERMINATED") return;
+          const jitter = Math.floor(Math.random() * 5) - 2; // -2 to +2 dBm
+          const liveRssi = Math.min(-35, Math.max(-95, drone.rssi + jitter));
+          document.getElementById("ui-rssi-val").textContent =
+            `${liveRssi} dBm`;
+          updateRssiBars(liveRssi);
+        }, 1100);
       }
 
-      // Render Target Select Matrix Cards
-      function renderMatrixCards() {
-        const container = document.getElementById("drone-list-matrix");
-        container.innerHTML = "";
+      // --- 3. RADAR CANVAS RENDERING & ANIMATION ---
+      function initRadarCanvas() {
+        const canvas = document.getElementById("radar-canvas");
+        const ctx = canvas.getContext("2d");
 
-        droneTargets.forEach((drone) => {
-          const isSelected = drone.id === selectedTarget.id;
-          const isMilitary = drone.type === "military";
-          const badgeColor = isMilitary
-            ? "text-cyber-red border-cyber-red/30 bg-cyber-red/10"
-            : "text-cyber-green border-cyber-green/30 bg-cyber-green/10";
-          const borderActive = isSelected
-            ? "border-cyber-cyan bg-cyber-cyan/10 glow-cyan"
-            : "border-cyber-border bg-cyber-card/60 hover:border-slate-500";
-
-          const card = document.createElement("div");
-          card.className = `p-2.5 rounded border ${borderActive} cursor-pointer transition font-mono text-xs flex flex-col justify-between`;
-          card.onclick = () => selectTarget(drone.id);
-
-          card.innerHTML = `
-                    <div class="flex justify-between items-start mb-1">
-                        <span class="font-bold text-white truncate max-w-[120px]">${drone.name}</span>
-                        <span class="text-[9px] px-1.5 py-0.2 rounded border ${badgeColor}">${isMilitary ? "MIL" : "PUB"}</span>
-                    </div>
-                    <div class="text-[10px] text-slate-400 flex justify-between">
-                        <span>${drone.rf}</span>
-                        <span class="text-cyber-cyan font-bold">${drone.dist.split("/")[0]}</span>
-                    </div>
-                `;
-          container.appendChild(card);
-        });
-      }
-
-      // Select Target Action
-      function selectTarget(targetId) {
-        const target = droneTargets.find((d) => d.id === targetId);
-        if (!target) return;
-
-        selectedTarget = target;
-
-        // Update Details Panel UI
-        document.getElementById("detail-name").innerText = target.name;
-        document.getElementById("detail-maker").innerText =
-          `Pabrikan: ${target.maker}`;
-        document.getElementById("detail-category").innerText = target.category;
-        document.getElementById("detail-category").className =
-          target.type === "military"
-            ? "font-bold text-cyber-red text-[11px]"
-            : "font-bold text-cyber-green text-[11px]";
-
-        document.getElementById("detail-stack").innerText = target.stack;
-        document.getElementById("detail-firmware").innerText = target.firmware;
-        document.getElementById("detail-rf").innerText = target.rf;
-        document.getElementById("detail-dist").innerText = target.dist;
-
-        document.getElementById("detail-vuln").innerText =
-          `EXPLOITABLE (${target.vuln}%)`;
-        document.getElementById("detail-vuln-bar").style.width =
-          `${target.vuln}%`;
-        document.getElementById("detail-exploit-info").innerText =
-          target.exploitInfo;
-
-        const threatBadge = document.getElementById("target-threat-badge");
-        threatBadge.innerText = target.threat;
-        if (target.type === "military") {
-          threatBadge.className =
-            "px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyber-red/20 text-cyber-red border border-cyber-red/40 animate-pulse";
-        } else {
-          threatBadge.className =
-            "px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyber-yellow/20 text-cyber-yellow border border-cyber-yellow/40";
+        function resizeCanvas() {
+          const wrapper = document.getElementById("radar-wrapper");
+          const size = wrapper.clientWidth;
+          const dpr = window.devicePixelRatio || 1;
+          canvas.width = size * dpr;
+          canvas.height = size * dpr;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         }
 
-        // Re-render Radar & Matrix to update selected highlights
-        renderRadarBlips();
-        renderMatrixCards();
+        resizeCanvas();
+        window.addEventListener("resize", resizeCanvas);
 
-        logTerminal(
-          `[TARGET ACQUIRED] ${target.name} terkunci pada frekuensi ${target.rf}.`,
-          "text-cyber-cyan",
-        );
+        // Click on Radar Blip
+        canvas.addEventListener("click", (e) => {
+          const rect = canvas.getBoundingClientRect();
+          const clickX = e.clientX - rect.left;
+          const clickY = e.clientY - rect.top;
+
+          for (let pos of radarScreenPositions) {
+            const dist = Math.hypot(clickX - pos.x, clickY - pos.y);
+            if (dist <= 20) {
+              selectDrone(pos.id);
+              break;
+            }
+          }
+        });
+
+        function drawRadar() {
+          const wrapper = document.getElementById("radar-wrapper");
+          const size = wrapper.clientWidth;
+          const cx = size / 2;
+          const cy = size / 2;
+          const maxR = size / 2 - 26;
+
+          ctx.clearRect(0, 0, size, size);
+
+          // Radar Outer Dark Radial Fill
+          const bgGrad = ctx.createRadialGradient(cx, cy, 10, cx, cy, maxR);
+          bgGrad.addColorStop(0, "rgba(0, 240, 255, 0.08)");
+          bgGrad.addColorStop(0.7, "rgba(5, 12, 24, 0.88)");
+          bgGrad.addColorStop(1, "rgba(3, 7, 15, 0.98)");
+          ctx.fillStyle = bgGrad;
+          ctx.beginPath();
+          ctx.arc(cx, cy, maxR, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Concentric Distance Rings (250m, 500m, 750m, 1000m)
+          ctx.lineWidth = 1;
+          const ringLabels = ["250m", "500m", "750m", "1000m"];
+          for (let i = 1; i <= 4; i++) {
+            const r = (maxR / 4) * i;
+            ctx.strokeStyle =
+              i === 4 ? "rgba(0, 240, 255, 0.55)" : "rgba(0, 240, 255, 0.16)";
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Distance label
+            if (i < 4) {
+              ctx.fillStyle = "rgba(148, 163, 184, 0.6)";
+              ctx.font = '10px "Share Tech Mono", monospace';
+              ctx.textAlign = "left";
+              ctx.fillText(ringLabels[i - 1], cx + 5, cy - r + 11);
+            }
+          }
+
+          // Crosshair Lines & Degree Markers
+          ctx.strokeStyle = "rgba(0, 240, 255, 0.18)";
+          for (let deg = 0; deg < 360; deg += 30) {
+            const rad = (deg - 90) * (Math.PI / 180);
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(cx + maxR * Math.cos(rad), cy + maxR * Math.sin(rad));
+            ctx.stroke();
+          }
+
+          // Cardinal Degree Labels (N/000°, E/090°, S/180°, W/270°)
+          ctx.fillStyle = "#00f0ff";
+          ctx.font = 'bold 11px "Share Tech Mono", monospace';
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("N / 000°", cx, cy - maxR - 13);
+          ctx.fillText("E / 090°", cx + maxR + 22, cy);
+          ctx.fillText("S / 180°", cx, cy + maxR + 13);
+          ctx.fillText("W / 270°", cx - maxR - 22, cy);
+
+          // Rotating Radar Sweep Cone
+          ctx.save();
+          ctx.translate(cx, cy);
+          ctx.rotate(sweepAngle);
+
+          for (let a = 0; a < 45; a++) {
+            const alpha = (1 - a / 45) * 0.28;
+            ctx.fillStyle = `rgba(0, 240, 255, ${alpha})`;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.arc(
+              0,
+              0,
+              maxR,
+              -a * (Math.PI / 180),
+              -(a + 1.2) * (Math.PI / 180),
+              true,
+            );
+            ctx.closePath();
+            ctx.fill();
+          }
+
+          // Leading Bright Sweep Line
+          ctx.strokeStyle = "rgba(0, 240, 255, 0.9)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(maxR, 0);
+          ctx.stroke();
+          ctx.restore();
+
+          sweepAngle = (sweepAngle + 0.025) % (Math.PI * 2);
+
+          // Update & Draw Drone Blips
+          radarScreenPositions = [];
+          const timeNow = Date.now() / 1000;
+
+          drones.forEach((drone) => {
+            if (drone.status !== "TERMINATED") {
+              drone.angleRad += drone.speedAngle;
+              let deg = Math.round((drone.angleRad * 180) / Math.PI + 90) % 360;
+              if (deg < 0) deg += 360;
+              drone.bearing = deg;
+            }
+
+            const r = drone.radiusRatio * maxR;
+            const bx = cx + r * Math.cos(drone.angleRad);
+            const by = cy + r * Math.sin(drone.angleRad);
+
+            radarScreenPositions.push({ id: drone.id, x: bx, y: by });
+
+            let color = "#00ff9d"; // Commercial/Public
+            if (drone.status === "TERMINATED") {
+              color = "#475569"; // Offline Gray
+            } else if (drone.status === "HIJACKED") {
+              color = "#b829ff"; // Hijacked Purple
+            } else if (drone.category === "military") {
+              color = "#ff2a5f"; // Military Red
+            }
+
+            const isSelected = drone.id === selectedDroneId;
+
+            if (drone.status !== "TERMINATED") {
+              const pulse = (timeNow * 1.5) % 1;
+              ctx.strokeStyle = color;
+              ctx.globalAlpha = 1 - pulse;
+              ctx.lineWidth = 1.5;
+              ctx.beginPath();
+              ctx.arc(bx, by, 6 + pulse * 14, 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.globalAlpha = 1;
+            }
+
+            if (isSelected) {
+              ctx.strokeStyle = "#00f0ff";
+              ctx.lineWidth = 2;
+              ctx.beginPath();
+              ctx.arc(bx, by, 13, 0, Math.PI * 2);
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.moveTo(bx - 17, by);
+              ctx.lineTo(bx - 10, by);
+              ctx.moveTo(bx + 10, by);
+              ctx.lineTo(bx + 17, by);
+              ctx.moveTo(bx, by - 17);
+              ctx.lineTo(bx, by - 10);
+              ctx.moveTo(bx, by + 10);
+              ctx.lineTo(bx, by + 17);
+              ctx.stroke();
+            }
+
+            ctx.fillStyle = color;
+            ctx.shadowColor = color;
+            ctx.shadowBlur = drone.status === "TERMINATED" ? 0 : 12;
+            ctx.beginPath();
+            ctx.arc(bx, by, isSelected ? 6 : 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            ctx.fillStyle =
+              drone.status === "TERMINATED" ? "#94a3b8" : "#ffffff";
+            ctx.beginPath();
+            ctx.arc(bx, by, 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = isSelected ? "#00f0ff" : "#e2e8f0";
+            ctx.font = isSelected
+              ? 'bold 11px "Share Tech Mono", monospace'
+              : '10px "Share Tech Mono", monospace';
+            ctx.textAlign = "left";
+            const statusTag =
+              drone.status === "HIJACKED"
+                ? " [DS26]"
+                : drone.status === "TERMINATED"
+                  ? " [OFF]"
+                  : "";
+            ctx.fillText(`${drone.id}${statusTag}`, bx + 11, by - 4);
+          });
+
+          const currentDrone = drones.find((d) => d.id === selectedDroneId);
+          if (currentDrone && currentDrone.status !== "TERMINATED") {
+            updateBearingUI(currentDrone.bearing, currentDrone.altitude);
+          }
+
+          requestAnimationFrame(drawRadar);
+        }
+
+        drawRadar();
       }
 
-      // Execute Hacking Sequence
-      function executeHackProcess() {
-        const modalHacking = document.getElementById("modal-hacking");
-        const progressBar = document.getElementById("hack-progress-bar");
-        const percentText = document.getElementById("hack-percent");
-        const statusStep = document.getElementById("hack-status-step");
-        const sublog = document.getElementById("hack-sublog");
+      // --- 4. TARGET SELECTION & UI TELEMETRY UPDATE ---
+      function selectDrone(id) {
+        selectedDroneId = id;
+        const drone = drones.find((d) => d.id === id);
+        if (!drone) return;
 
-        document.getElementById("hack-target-label").innerText =
-          `Target: ${selectedTarget.name} (${selectedTarget.rf})`;
+        renderQuickTargetList();
 
-        modalHacking.classList.remove("hidden");
-        progressBar.style.width = "0%";
-        percentText.innerText = "0%";
+        const panel = document.getElementById("telemetry-panel");
+        if (panel) {
+          panel.classList.remove(
+            "panel-danger",
+            "panel-success",
+            "panel-hijack",
+          );
+          if (drone.status === "HIJACKED") {
+            panel.classList.add("panel-hijack");
+          } else if (drone.status === "TERMINATED") {
+            panel.classList.add("panel-danger");
+          } else if (drone.category === "military") {
+            panel.classList.add("panel-danger");
+          }
+        }
 
-        logTerminal(
-          `[HACK STARTED] Mengirimkan muatan DS26 ke target: ${selectedTarget.name}...`,
-          "text-cyber-yellow",
+        const setElText = (id, text) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = text;
+        };
+
+        setElText("ui-target-id", `ID: ${drone.id}`);
+        setElText("ui-drone-model", drone.model);
+        setElText("ui-drone-maker", `Manufaktur: ${drone.maker}`);
+        setElText("ui-flight-stack", drone.stack);
+        setElText("ui-firmware", `FW: ${drone.firmware}`);
+        setElText("ui-frequency", drone.frequency);
+        setElText("ui-modulation", `Protokol: ${drone.modulation}`);
+
+        const classBadge = document.getElementById("ui-device-class-badge");
+        if (classBadge) {
+          classBadge.textContent = drone.classification;
+          if (drone.category === "military") {
+            classBadge.className =
+              "inline-block px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-ds-red/15 text-ds-red border border-ds-red/50";
+          } else {
+            classBadge.className =
+              "inline-block px-2.5 py-1 rounded text-[11px] font-mono font-bold bg-ds-green/15 text-ds-green border border-ds-green/40";
+          }
+        }
+
+        const sigStatus = document.getElementById("ui-signal-status");
+        const hijackBox = document.getElementById("hijack-control-box");
+        const hackBtn = document.getElementById("btn-execute-hack");
+        const rfWave = document.getElementById("ui-rf-waveform");
+
+        if (drone.status === "HIJACKED") {
+          if (sigStatus) {
+            sigStatus.innerHTML = `<i class="fa-solid fa-crown"></i> HIJACKED // UNDER DS26 CONTROL`;
+            sigStatus.className =
+              "text-ds-purple font-bold flex items-center gap-1.5 text-glow-purple";
+          }
+          if (hijackBox) hijackBox.classList.remove("hidden");
+          if (rfWave) rfWave.classList.remove("opacity-20");
+          if (hackBtn) {
+            hackBtn.disabled = false;
+            hackBtn.innerHTML = `<i class="fa-solid fa-satellite"></i><span>RE-INJECT // OVERRIDE PAYLOAD</span>`;
+            hackBtn.className =
+              "w-full py-3.5 px-5 rounded-lg bg-ds-purple hover:bg-purple-600 text-white font-head font-black text-sm tracking-widest uppercase shadow-lg glow-purple transition-all flex items-center justify-center gap-3 cursor-pointer";
+          }
+        } else if (drone.status === "TERMINATED") {
+          if (sigStatus) {
+            sigStatus.innerHTML = `<i class="fa-solid fa-ban"></i> NEUTRALIZED // SIGNAL OFFLINE`;
+            sigStatus.className =
+              "text-slate-500 font-bold flex items-center gap-1.5";
+          }
+          if (hijackBox) hijackBox.classList.add("hidden");
+          if (rfWave) rfWave.classList.add("opacity-20");
+          if (hackBtn) {
+            hackBtn.disabled = true;
+            hackBtn.innerHTML = `<i class="fa-solid fa-power-off"></i><span>TARGET NEUTRALIZED (OFFLINE)</span>`;
+            hackBtn.className =
+              "w-full py-3.5 px-5 rounded-lg bg-slate-800 text-slate-500 font-head font-black text-sm tracking-widest uppercase border border-slate-700 flex items-center justify-center gap-3 cursor-not-allowed";
+          }
+        } else {
+          if (sigStatus) {
+            if (drone.category === "military") {
+              sigStatus.innerHTML = `<i class="fa-solid fa-shield-halved text-ds-amber"></i> ENCRYPTED LINK // SIGNAL ACQUIRED`;
+              sigStatus.className =
+                "text-ds-amber font-bold flex items-center gap-1.5";
+            } else {
+              sigStatus.innerHTML = `<i class="fa-solid fa-lock"></i> LOCKED // SIGNAL ACQUIRED`;
+              sigStatus.className =
+                "text-ds-green font-bold flex items-center gap-1.5";
+            }
+          }
+          if (hijackBox) hijackBox.classList.add("hidden");
+          if (rfWave) rfWave.classList.remove("opacity-20");
+          if (hackBtn) {
+            hackBtn.disabled = false;
+            hackBtn.innerHTML = `<i class="fa-solid fa-skull-crossbones text-lg"></i><span>EKSEKUSI PERETASAN // DS26 INJECT</span>`;
+            hackBtn.className =
+              "w-full py-4 px-5 rounded-lg btn-hack-gradient text-white font-head font-black text-sm sm:text-base tracking-widest uppercase shadow-lg glow-red hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 cursor-pointer border border-red-400/50";
+          }
+        }
+
+        setElText(
+          "ui-rssi-val",
+          drone.status === "TERMINATED" ? "-- dBm" : `${drone.rssi} dBm`,
+        );
+        setElText("ui-distance", `Jarak: ${drone.distance} m`);
+        updateRssiBars(drone.status === "TERMINATED" ? -120 : drone.rssi);
+
+        updateBearingUI(drone.bearing, drone.altitude);
+
+        const vulnLabel = document.getElementById("ui-vuln-label");
+        if (vulnLabel) {
+          vulnLabel.textContent =
+            drone.vulnerability >= 70
+              ? `TINGGI (${drone.vulnerability}% EXPLOITABLE)`
+              : `KETAT (${drone.vulnerability}% EXPLOITABLE)`;
+          vulnLabel.className =
+            drone.vulnerability >= 70
+              ? "text-ds-green font-bold"
+              : "text-ds-amber font-bold";
+        }
+        const vulnBar = document.getElementById("ui-vuln-bar");
+        if (vulnBar) vulnBar.style.width = `${drone.vulnerability}%`;
+        setElText("ui-vuln-desc", drone.vulnDesc);
+      }
+
+      function updateRssiBars(rssi) {
+        const barsContainer = document.getElementById("ui-rssi-bars");
+        const qualityEl = document.getElementById("ui-rssi-quality");
+        let activeCount = 0;
+        let barColor = "bg-ds-green";
+
+        if (rssi <= -100) {
+          activeCount = 0;
+          qualityEl.textContent = "0% LINK";
+          qualityEl.className = "text-slate-500 font-bold";
+        } else {
+          const pct = Math.min(
+            99,
+            Math.max(18, Math.round((rssi + 100) * 1.8)),
+          );
+          if (rssi >= -55) {
+            activeCount = 5;
+            qualityEl.textContent = `${pct}% EXCELLENT`;
+            qualityEl.className = "text-ds-green font-bold";
+          } else if (rssi >= -65) {
+            activeCount = 4;
+            qualityEl.textContent = `${pct}% STRONG`;
+            qualityEl.className = "text-ds-green font-bold";
+          } else if (rssi >= -75) {
+            activeCount = 3;
+            barColor = "bg-ds-amber";
+            qualityEl.textContent = `${pct}% MODERATE`;
+            qualityEl.className = "text-ds-amber font-bold";
+          } else {
+            activeCount = 2;
+            barColor = "bg-ds-red";
+            qualityEl.textContent = `${pct}% WEAK`;
+            qualityEl.className = "text-ds-red font-bold";
+          }
+        }
+
+        barsContainer.innerHTML = "";
+        for (let i = 1; i <= 5; i++) {
+          const div = document.createElement("div");
+          div.className = `h-full flex-1 rounded-xs transition-all ${i <= activeCount ? barColor : "bg-slate-800"}`;
+          barsContainer.appendChild(div);
+        }
+      }
+
+      function updateBearingUI(deg, alt) {
+        const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+        const idx = Math.round(deg / 45) % 8;
+        const paddedDeg = String(deg).padStart(3, "0");
+        document.getElementById("ui-bearing-text").textContent =
+          `${paddedDeg}° ${dirs[idx]}`;
+        document.getElementById("ui-altitude").textContent = `Alt: ${alt}m AGL`;
+        document.getElementById("ui-compass-needle").style.transform =
+          `rotate(${deg}deg)`;
+      }
+
+      function renderQuickTargetList() {
+        const listEl = document.getElementById("quick-target-list");
+        listEl.innerHTML = "";
+
+        let activeCount = 0;
+
+        drones.forEach((drone) => {
+          if (drone.status !== "TERMINATED") activeCount++;
+
+          const isSelected = drone.id === selectedDroneId;
+          let statusBadge = "";
+          let dotColor =
+            drone.category === "military" ? "bg-ds-red" : "bg-ds-green";
+
+          if (drone.status === "HIJACKED") {
+            dotColor = "bg-ds-purple";
+            statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded bg-ds-purple/20 text-ds-purple border border-ds-purple/50 font-bold">HIJACKED</span>`;
+          } else if (drone.status === "TERMINATED") {
+            dotColor = "bg-slate-600";
+            statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">OFFLINE</span>`;
+          } else {
+            statusBadge = `<span class="text-[9px] px-1.5 py-0.5 rounded ${drone.category === "military" ? "bg-ds-red/15 text-ds-red border-ds-red/40" : "bg-ds-green/15 text-ds-green border-ds-green/40"} border">${drone.category === "military" ? "MILITER" : "PUBLIK"}</span>`;
+          }
+
+          const card = document.createElement("button");
+          card.onclick = () => {
+            selectDrone(drone.id);
+            addTerminalLog(
+              `[LOCK] Target dikunci pada ${drone.id} (${drone.model}) @ ${drone.frequency}.`,
+              "text-ds-cyan",
+            );
+          };
+          card.className = `text-left p-2.5 rounded-lg border transition-all font-mono cursor-pointer ${
+            isSelected
+              ? "bg-ds-cyan/15 border-ds-cyan glow-cyan"
+              : "bg-ds-bg/80 border-ds-border hover:border-slate-500"
+          }`;
+
+          card.innerHTML = `
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="flex items-center gap-1.5 text-xs font-bold text-white">
+                            <span class="w-2 h-2 rounded-full ${dotColor}"></span>
+                            ${drone.id}
+                        </span>
+                        ${statusBadge}
+                    </div>
+                    <div class="text-xs text-slate-200 truncate font-sans font-semibold">${drone.model}</div>
+                    <div class="flex justify-between text-[10px] text-slate-400 mt-1">
+                        <span>${drone.frequency}</span>
+                        <span>${drone.status === "TERMINATED" ? "--" : drone.rssi + " dBm"}</span>
+                    </div>
+                `;
+          listEl.appendChild(card);
+        });
+
+        document.getElementById("active-drone-counter").textContent =
+          `${activeCount} Perangkat Aktif di Udara`;
+        document.getElementById("header-scan-status").textContent =
+          `ACTIVE SCANNING - ${activeCount} TARGETS LOCKED`;
+      }
+
+      // --- 5. HACKING EXECUTION SEQUENCE ---
+      function startHackSequence() {
+        const drone = drones.find((d) => d.id === selectedDroneId);
+        if (!drone || drone.status === "TERMINATED") return;
+
+        const modal = document.getElementById("modal-progress");
+        const bar = document.getElementById("modal-prog-bar");
+        const percentEl = document.getElementById("modal-prog-percent");
+        const stepEl = document.getElementById("modal-prog-step");
+        const consoleEl = document.getElementById("modal-prog-console");
+
+        document.getElementById("modal-prog-target").textContent =
+          `Target: ${drone.model} [${drone.frequency}]`;
+        bar.style.width = "0%";
+        percentEl.textContent = "0%";
+        consoleEl.innerHTML = `<div>> Initializing DS26 RF Exploit Engine on ${drone.frequency}...</div>`;
+
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+
+        addTerminalLog(
+          `[INJECT] Memulai serangan Command Injection ke ${drone.id} (${drone.model})...`,
+          "text-ds-amber",
         );
 
-        let progress = 0;
         const steps = [
-          "Melakukan Synchronization Signal Lock...",
-          "Menginjeksi Buffer Overflow Payload...",
-          "Mematahkan Handshake Enkripsi...",
-          "Bypassing Flight Controller Security...",
-          "Mengambil Alih Command Telemetry...",
+          {
+            pct: 20,
+            label: "Scanning RF Handshake...",
+            log: `> Capturing ${drone.stack} telemetry frame headers...`,
+          },
+          {
+            pct: 45,
+            label: "Bypassing Protocol Encryption...",
+            log: `> Exploiting ${drone.firmware} authentication token vulnerability...`,
+          },
+          {
+            pct: 72,
+            label: "Spoofing GCS MAC Address...",
+            log: `> Generating spoofed Ground Control Station packet payload...`,
+          },
+          {
+            pct: 95,
+            label: "Injecting DS26 Override Payload...",
+            log: `> Flooding control channel with priority override commands...`,
+          },
+          {
+            pct: 100,
+            label: "Verifying Control Link...",
+            log: `> Waiting for target acknowledgment...`,
+          },
         ];
 
-        const interval = setInterval(() => {
-          progress += Math.floor(Math.random() * 15) + 8;
-          if (progress > 100) progress = 100;
-
-          progressBar.style.width = `${progress}%`;
-          percentText.innerText = `${progress}%`;
-
-          const currentStepIdx = Math.min(
-            Math.floor((progress / 100) * steps.length),
-            steps.length - 1,
-          );
-          statusStep.innerText = steps[currentStepIdx];
-          sublog.innerHTML += `> ${steps[currentStepIdx]}<br>`;
-          sublog.scrollTop = sublog.scrollHeight;
-
-          if (progress >= 100) {
-            clearInterval(interval);
+        let idx = 0;
+        const timer = setInterval(() => {
+          if (idx < steps.length) {
+            const s = steps[idx];
+            bar.style.width = `${s.pct}%`;
+            percentEl.textContent = `${s.pct}%`;
+            stepEl.textContent = s.label;
+            consoleEl.innerHTML += `<div>${s.log}</div>`;
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+            idx++;
+          } else {
+            clearInterval(timer);
             setTimeout(() => {
-              modalHacking.classList.add("hidden");
-              determineHackOutcome();
-            }, 500);
+              closeModal("modal-progress");
+              evaluateHackResult(drone);
+            }, 450);
           }
-        }, 300);
+        }, 420);
       }
 
-      // Determine Hack Outcome (Random / Forced via Simulation Dropdown)
-      function determineHackOutcome() {
-        const mode = document.getElementById("sim-outcome").value;
+      function evaluateHackResult(drone) {
+        const simMode = document.getElementById("sim-mode").value;
         let isSuccess = false;
 
-        if (mode === "success") {
+        if (simMode === "force_success") {
           isSuccess = true;
-        } else if (mode === "fail") {
+        } else if (simMode === "force_fail") {
           isSuccess = false;
         } else {
-          // Random based on vulnerability percentage
-          const roll = Math.random() * 100;
-          isSuccess = roll <= selectedTarget.vuln;
+          // Auto mode based on vulnerability score
+          isSuccess = Math.random() * 100 <= drone.vulnerability;
         }
 
         if (isSuccess) {
-          document.getElementById("success-drone-name").innerText =
-            selectedTarget.name;
-          document.getElementById("modal-success").classList.remove("hidden");
-          logTerminal(
-            `[HACK SUCCESS] Kontrol drone ${selectedTarget.name} berhasil diretas 100%!`,
-            "text-cyber-green font-bold",
+          document.getElementById("success-target-name").textContent =
+            `${drone.model} (${drone.id})`;
+          document.getElementById("success-target-freq").textContent =
+            `${drone.stack} // ${drone.frequency}`;
+          const modalSuccess = document.getElementById("modal-success");
+          modalSuccess.classList.remove("hidden");
+          modalSuccess.classList.add("flex");
+          addTerminalLog(
+            `[SUCCESS] PERETASAN BERHASIL! Protokol ${drone.id} (${drone.model}) berhasil ditembus!`,
+            "text-ds-green font-bold",
           );
         } else {
-          document.getElementById("modal-fail").classList.remove("hidden");
-          logTerminal(
-            `[HACK FAILED] Peretasan ke ${selectedTarget.name} gagal. Sinyal tertolak.`,
-            "text-cyber-red font-bold",
+          document.getElementById("fail-target-name").textContent =
+            `${drone.model} (${drone.id})`;
+          document.getElementById("fail-reason-text").textContent =
+            drone.failReason;
+          const modalFail = document.getElementById("modal-fail");
+          modalFail.classList.remove("hidden");
+          modalFail.classList.add("flex");
+          addTerminalLog(
+            `[FAILED] PERETASAN GAGAL pada ${drone.id}. ${drone.failReason}.`,
+            "text-ds-red font-bold",
           );
         }
       }
 
-      // Post Hack Actions
-      function executeAction(actionType) {
+      // --- 6. POST-HACK ACTIONS (TAKEOVER & SHUTDOWN) ---
+      function handleTakeover() {
+        const drone = drones.find((d) => d.id === selectedDroneId);
+        if (!drone) return;
+
+        drone.status = "HIJACKED";
         closeModal("modal-success");
-        if (actionType === "TAKEOVER") {
-          logTerminal(
-            `[TAKEOVER EXECUTED] Kendali drone ${selectedTarget.name} diambil alih! Menjalankan Auto-Landing Taktis ke Markas.`,
-            "text-cyber-cyan font-bold",
-          );
-          alert(
-            `[DS26 TAKEOVER]\n\nSistem berhasil mengambil alih navigasi ${selectedTarget.name}.\nDrone diperintahkan untuk mendarat di koordinat aman pasukan.`,
-          );
-        } else if (actionType === "SHUTDOWN") {
-          logTerminal(
-            `[FORCE SHUTDOWN] Perintah matikan motor terkirim ke ${selectedTarget.name}. Drone jatuh secara instan!`,
-            "text-cyber-red font-bold",
-          );
-          alert(
-            `[DS26 FORCE SHUTDOWN]\n\nPerintah shutdown paksa dieksekusi!\nMotor ${selectedTarget.name} telah dimatikan secara instan.`,
-          );
-        }
+        selectDrone(drone.id);
+        renderQuickTargetList();
+        addTerminalLog(
+          `[TAKEOVER] KENDALI DIAMBIL ALIH! ${drone.id} (${drone.model}) kini di bawah kendali penuh DS26.`,
+          "text-ds-purple font-bold",
+        );
       }
 
-      // Close Modals Helper
+      function handleShutdown() {
+        const drone = drones.find((d) => d.id === selectedDroneId);
+        if (!drone) return;
+
+        drone.status = "TERMINATED";
+        closeModal("modal-success");
+        selectDrone(drone.id);
+        renderQuickTargetList();
+        addTerminalLog(
+          `[SHUTDOWN] EMERGENCY KILL DIEKSEKUSI! Motor & sistem navigasi ${drone.id} dimatikan paksa.`,
+          "text-ds-red font-bold",
+        );
+      }
+
+      function sendHijackCommand(cmdName) {
+        const drone = drones.find((d) => d.id === selectedDroneId);
+        if (!drone) return;
+        addTerminalLog(
+          `[DS26-CMD] Mengirim perintah navigasi "${cmdName}" ke ${drone.id}... [EXECUTED]`,
+          "text-ds-cyan font-bold",
+        );
+      }
+
+      // --- 7. UTILITIES ---
       function closeModal(modalId) {
-        document.getElementById(modalId).classList.add("hidden");
+        const el = document.getElementById(modalId);
+        el.classList.add("hidden");
+        el.classList.remove("flex");
       }
 
-      // Append Message to Terminal Console
-      function logTerminal(message, colorClass = "text-slate-300") {
-        const body = document.getElementById("terminal-body");
+      function addTerminalLog(msg, colorClass = "text-slate-300") {
+        const container = document.getElementById("terminal-logs");
         const time = new Date().toTimeString().split(" ")[0];
-        const line = document.createElement("div");
-        line.className = `${colorClass} font-mono`;
-        line.innerHTML = `<span class="text-slate-600">[${time}]</span> ${message}`;
-        body.appendChild(line);
-        body.scrollTop = body.scrollHeight;
+        const row = document.createElement("div");
+        row.className = colorClass;
+        row.innerHTML = `<span class="text-slate-500">[${time}]</span> ${msg}`;
+        container.appendChild(row);
+        container.scrollTop = container.scrollHeight;
       }
 
       function clearTerminal() {
-        document.getElementById("terminal-body").innerHTML =
-          '<div class="text-slate-500">[LOG CLEARED] Console reset by operator.</div>';
+        document.getElementById("terminal-logs").innerHTML =
+          `<div class="text-slate-500">[SYSTEM] Log terminal dibersihkan oleh operator.</div>`;
+      }
+
+      function resetSimulation() {
+        drones = JSON.parse(JSON.stringify(initialDrones));
+        selectDrone("DRONE-01");
+        renderQuickTargetList();
+        addTerminalLog(
+          "[SYSTEM] Simulasi di-reset. Seluruh target radar dipulihkan ke status awal.",
+          "text-ds-amber",
+        );
       }
     </script>
   </body>
